@@ -1,5 +1,5 @@
 from tests.utils import PingBehavior, PongBehavior
-from core import Agent
+from core.entities import Agent
 from behavior.agents import SimpleAgentUpdate
 from utils.spatial import Position, Positions
 
@@ -39,8 +39,6 @@ def testSimpleBehavior():
     a = Agent()
     def test_behavior(agent:Agent, time_step:int):
         env = agent.get_environment()
-        api = agent.get_api()
-        #net = agen
         env["Test"] = time_step
        
 

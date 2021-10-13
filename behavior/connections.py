@@ -1,4 +1,4 @@
-from core import Behavior, Connection
+from core.entities import Behavior, Connection
 from math import pi, pow
 from itertools import permutations
 

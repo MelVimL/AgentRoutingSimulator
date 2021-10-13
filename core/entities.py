@@ -1,6 +1,6 @@
 from abc import abstractmethod
-from ..utils.common import Indentifiable
-from ..utils.spatial import Positions
+from utils.common import Indentifiable
+from utils.spatial import Positions
 
 class Behavior:
     """
