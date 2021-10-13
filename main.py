@@ -8,3 +8,13 @@ class Simulation:
     
     def update() -> None:
         pass
+
+
+
+def main():
+    while True:
+        print("Hallo Docker")
+
+
+if __name__ == "__main__":
+    main()
