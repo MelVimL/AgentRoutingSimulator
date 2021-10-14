@@ -1,14 +1,19 @@
-from core.entities import Behavior, Connection
+from core.entities import Connection
+from core.behavior import Behavior
 from math import pi, pow
 from itertools import permutations
 
 
 def distance_of_agents(a, b):
     return a.get_position().distance(b.get_position())
+class ConnectionBehavior(Behavior):
+    
+    def get_connection(self) -> Connection:
+        return self.behaving
 
-class Wireless(Behavior):
+class Wireless(ConnectionBehavior):
 
-    def __init__(self, config) -> None:
+    def __init__(self, config={}) -> None:
         self.config = config
         super().__init__()
     
@@ -23,22 +28,34 @@ class Wireless(Behavior):
             signal_strength = power-self.db_to_power(damping)/4*pi*pow(distance)
             bytes_per_timestep = 100
             bytes_per_participant = bytes_per_timestep//len(participances)
-      
+
+
+class SimpleWireless(ConnectionBehavior):
+    def __init__(self, config={}) -> None:
+        self.config = config
+        self.max_range = self.config.get("max_range", 100.)
+        self.max_bandwidth = self.config.get("max_bandwidth", 600.)
+        self.time_step_length = self.config.get("time_per_step", 1.)
+        super().__init__()
+    
+    def update(self, time_step):
+        connection: Connection = self.behaving
+        agents = connection.get_participants()
+        agents_with_messages = ((a, b) for a, b in permutations(agents, 2))
+        bandwidth_per_agent = self.max_bandwidth/len(agents_with_messages)
+        for a, b in agents_with_messages:
+
+            distance = distance_of_agents(a, b)
+            signal_strength = -(1/self.max_range)*distance**2+1
+            bytes = round(bandwidth_per_agent*signal_strength*self.time_step_length)
             
-
-
-
-        
-        
-
-
-        
-
-class LinearConntection(Behavior):
+            connection.transfer_byte(a, b,)
+            
+class LinearConntection(ConnectionBehavior):
     _needed_config = ["cost_per_distance", "max_range", "min_range", "max_bits_per_tick"]
 
     
-    def __init__(self, config) -> None:
+    def __init__(self, config={}) -> None:
         self._valid_config(config)
         self.config = config
         super().__init__()
@@ -66,7 +83,4 @@ class LinearConntection(Behavior):
         for key in self._needed_config:
             if key not in config:
                 raise AttributeError("The config needs '{}'".format(key))
-                
-        
-         
-   
+             

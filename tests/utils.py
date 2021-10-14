@@ -1,4 +1,6 @@
-from core.entities import Agent, Behaving, Behavior
+from core.entities import Agent
+from core.behaving import Behaving
+from core.behavior import Behavior
 
 class PingBehavior(Behavior):
     def __init__(self, ether) -> None:

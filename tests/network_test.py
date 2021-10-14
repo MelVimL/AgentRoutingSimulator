@@ -13,7 +13,8 @@ def test_create_simple_network():
 
     net.add_agent(a1)
     net.add_agent(a2)
-    connection = net.connect(agent_a=a1, agent_b=a2)
+    connection = Connection([a1, a2])
+    net.connect(agent_a=a1, agent_b=a2, connection=connection)
 
     assert len(net.get_agents()) == 2 and len(net.get_connections()) == 1
 

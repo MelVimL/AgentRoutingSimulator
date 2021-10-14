@@ -1,4 +1,4 @@
-from typing import AsyncGenerator
+
 
 from core.entities import Agent, Connection
 from behavior.connections import Wireless
