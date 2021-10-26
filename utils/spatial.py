@@ -25,6 +25,8 @@ class Position:
     def invert(self):
         return self.scale(-1.)
 
+    def to_tuple(self):
+        return (self.x, self.y)
 
 class Positions:
 

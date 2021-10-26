@@ -6,5 +6,5 @@ class Indentifiable:
         try:
             return self._id
         except AttributeError as e:
-            self._id =  uuid.uuid1()
+            self._id = uuid.uuid1()
         return self._id

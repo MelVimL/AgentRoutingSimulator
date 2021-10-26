@@ -1,8 +1,9 @@
 from core.behavior import Behavior
+from core.entities import Agent, Connection
 from queue import Queue
 
 class AgentBehavior(Behavior):
-    def get_agent(self):
+    def get_agent(self) -> Agent:
         return self.behaving
 
 class SimpleAgentUpdate(AgentBehavior):
@@ -12,7 +13,6 @@ class SimpleAgentUpdate(AgentBehavior):
         super().__init__()
     
     def update(self, time_step):
-
         return self._update_function(self.behaving, time_step)
 
 
@@ -22,15 +22,33 @@ class SimpleReceiver(AgentBehavior):
         self.queue = Queue()
 
     def update(self, time_step: int) -> None:
-        for data in self.queue:
-            self
+        agent = self.get_agent()
+        net = agent.get_network()
+        for connection in net.get_connections(agent):
+            if connection.has_message(agent):
+                self.queue.put(connection.receive(agent))
+
+    def has_message(self):
+        return not self.queue.empty()
+
+class SimpleSender(AgentBehavior):
+    def __init__(self) -> None:
+        self.queue = Queue()
+
+    def update(self, time_step: int) -> None:
+        while not self.queue.empty():
+           self.send()
+ 
 
     def create_message(self, size):
         data = bytes(size)
         self.queue.put(data)
+    
+    def send(self):
+        agent = self.get_agent()
+        net = agent.get_network()
+        connections = net.get_connections(agent)
+        data = self.queue.get()
 
-
-class SimpleSender(AgentBehavior):
-
-    def update(self, time_step: int) -> None:
-        pass
+        for connection in connections:
+            connection.send(agent, data)
