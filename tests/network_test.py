@@ -1,6 +1,7 @@
 from core.entities import Agent, Connection
 from utils.spatial import Positions, Position
 from network import Network
+from factories import NetworkFactory
 from itertools import permutations
 
 def create_simple_network(size):
@@ -57,7 +58,9 @@ def test_get_connections():
     assert c == net.get_connections(agent_a)[0]
 
 
-
+def test_little_bottle_neck():
+    NetworkFactory.create_little_bottle_neck()
+    
 def test_create_simple_generator_network():
     pass
 

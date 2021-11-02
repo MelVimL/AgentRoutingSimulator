@@ -6,6 +6,7 @@ class AgentBehavior(Behavior):
     def get_agent(self) -> Agent:
         return self.behaving
 
+
 class SimpleAgentUpdate(AgentBehavior):
 
     def __init__(self, update_function) -> None:
@@ -31,6 +32,7 @@ class SimpleReceiver(AgentBehavior):
     def has_message(self):
         return not self.queue.empty()
 
+
 class SimpleSender(AgentBehavior):
     def __init__(self) -> None:
         self.queue = Queue()
@@ -38,7 +40,6 @@ class SimpleSender(AgentBehavior):
     def update(self, time_step: int) -> None:
         while not self.queue.empty():
            self.send()
- 
 
     def create_message(self, size):
         data = bytes(size)

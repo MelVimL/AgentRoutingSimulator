@@ -1,3 +1,4 @@
+from __future__ import annotations
 from math import sqrt
 
 
@@ -7,25 +8,25 @@ class Position:
         self.x = x
         self.y = y
     
-    def add(self, other):
+    def add(self, other: Position) -> Position:
         return Position(self.x+other.x, self.y+other.y)
     
-    def sub(self, other):
+    def sub(self, other: Position) -> Position:
         return Position(self.x-other.x, self.y-other.y)
 
-    def distance(self, other):
+    def distance(self, other: Position) -> float:
         x = abs(self.x-other.x)
         y = abs(self.y-other.y)
         
         return sqrt(x**2+y**2)
     
-    def scale(self, factor):
+    def scale(self, factor: float) -> Position:
         return Position(self.x*factor, self.y*factor)
     
-    def invert(self):
+    def invert(self) -> Position:
         return self.scale(-1.)
 
-    def to_tuple(self):
+    def to_tuple(self) -> Position:
         return (self.x, self.y)
 
 class Positions:
