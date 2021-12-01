@@ -4,7 +4,7 @@ from math import sqrt
 
 class Position:
     
-    def __init__(self, x, y) -> None:
+    def __init__(self, x: float, y: float) -> None:
         self.x = x
         self.y = y
     
@@ -26,7 +26,7 @@ class Position:
     def invert(self) -> Position:
         return self.scale(-1.)
 
-    def to_tuple(self) -> Position:
+    def to_tuple(self) -> tuple:
         return (self.x, self.y)
 
 class Positions:
@@ -47,7 +47,7 @@ class Quad:
         self.right = bottom_right.x
         self.left = left_top.x
     
-    def __contains__(self, position):
+    def __contains__(self, position: Position):
         pass
 
 
