@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
     name='AgentRoutingSimulator',         
-    packages=['agentrouting'],
+    packages=['AgentRoutingSimulator'],
     version='0.1',                
     license='GLP3',
     description='TYPE YOUR DESCRIPTION HERE',
