@@ -1,8 +1,17 @@
+from __future__ import annotations
+
+
 class Stats:
+    """
+    """
     def __init__(self) -> None:
+        """
+        """
         self._stats = {}
 
-    def get(self, name):
+    def get(self, name: str) -> Stat:
+        """
+        """
         return self._stats.setdefault(name, Stat(name))
 
     def __len__(self):
@@ -10,13 +19,20 @@ class Stats:
 
 
 class Stat:
-
-    def __init__(self, name) -> None:
+    """
+    """
+    def __init__(self, name: str) -> None:
+        """
+        """
         self._data = []
         self.name = name
 
-    def gather(self, value):
+    def gather(self, value: any):
+        """
+        """
         self._data.append(value)
 
-    def values(self):
+    def values(self) -> any:
+        """
+        """
         return self._data

@@ -1,28 +1,24 @@
-from core.entities import Agent, Connection
-from network import SimpleNetwork
+from AgentRoutingSimulator.core.entities import EntityScheduler
+from AgentRoutingSimulator.core.entities import Agent, Connection
+from AgentRoutingSimulator.network import SimpleNetwork
+from AgentRoutingSimulator.utils.stats import Stats
 
 
 class SimpleSimulation:
     """
-    
+
     """
-    
+
     def __init__(self) -> None:
-        self.agents = {}
-        self.connections = {}
+        self.stats = Stats()
+        self.entity_scheduler = EntityScheduler()
         self.network = SimpleNetwork()
         self.time_step = 0
 
     def update(self):
-        
-        for agent in self.agents:
-            agent.update(self.time_step)
-        
-        for connection in self.connections:
-            connection.update(self.time_step)
-
+        self.entity_scheduler.update(self.time_step)
         self.time_step += 1
-    
+
     def load(self, filename):
         pass
 
@@ -44,4 +40,3 @@ class SimpleSimulation:
                 connection.add(behavior_type())
         else:
             raise AttributeError("Unknown Entity.")
-

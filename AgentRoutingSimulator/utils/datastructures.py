@@ -55,7 +55,8 @@ class KDTree(SpaceStorage):
             self.tree = cKDTree(data=np.array(self.position_array))
             self._changed = False
 
-        res = self.tree.query_ball_point(agent.get_position().to_tuple(), range)
+        res = self.tree.query_ball_point(
+            agent.get_position().to_tuple(), range)
         return [self.position_array[x] for x in res]
 
 

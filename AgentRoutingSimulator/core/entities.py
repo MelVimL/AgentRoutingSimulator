@@ -1,3 +1,4 @@
+from __future__ import annotations
 from core.behaving import Behaving
 from utils.common import Indentifiable
 from utils.spatial import Position, Positions
@@ -6,39 +7,56 @@ from network import Network
 from queue import Queue
 
 
+class EntityScheduler:
+    """
+    """
+
+    def __init__(self) -> None:
+        """
+        """
+        self._entities: dict = {}
+
+    def update(self, tpf: int) -> None:
+        """
+        """
+        for priority in sorted(self._entities.keys()):
+            for entity in self._entities.get(priority):
+                entity.update(tpf)
+
+    def add(self, entity: Entity, priority: int = 0):
+        """
+        """
+        self._entities.setdefault(priority, []).append(entity)
+
+    def remove(self, entity: Entity):
+        """
+        """
+        for priority in sorted(self._entities.keys()):
+            try:
+                self._entities.get(priority).remove(entity)
+            except ValueError as e:
+                pass
+
+
 class Entity(Indentifiable, Behaving):
     """
     Entity is the Base Class for agents and Connections.
     It provides an Identifier, The possibility to add Behavior and is Hashable.
     """
-    def set_network(self, network):
-        #TODO: is it the right place???
-        self.network = network
 
     def __repr__(self) -> str:
         return str(self.get_id())
 
 
-class EnitityProcessor:
-    """
-    This Class aggregates enities and processes them in Order of time of sumitting the Enity. 
-    """
+class NetworkAccess:
+    def set_network(self, network: Network) -> None:
+        self.network = network
 
-    def __init__(self) -> None:
-        self.enities: list(Entity) = []
-
-    def update(self, time_step: int) -> None:
-        for entity in self.enities:
-            entity.update(time_step)
-
-    def add(self, entity: Entity) -> None:
-        self.enities.append(entity)
-
-    def remove(self, entity: Entity) -> None:
-        self.enities.remove(entity)
+    def get_network(self) -> Network:
+        return self.network
 
 
-class Agent(Entity):
+class Agent(Entity, NetworkAccess):
     """
     An Agent is an Entity that have spatial position and is a part of a Network.
     In addition add contrains to memory usage and computing cycles.
@@ -56,12 +74,6 @@ class Agent(Entity):
         """
         return self.position
 
-    def get_network(self) -> Network:
-        """
-        Returns the Network that the Agent is in.
-        """
-        return self.network
-
     def set_environment_limit(self, bytes: int) -> None:
         """
         Sets the limit of Bytes that can be stored in the environment.
@@ -75,7 +87,7 @@ class Agent(Entity):
         pass
 
 
-class Connection(Entity):
+class Connection(Entity, NetworkAccess):
     """
     A connection is an Enity which is 
     """
@@ -110,9 +122,9 @@ class Connection(Entity):
         self.environment: dict = environment
         self.network: Network = network
         self.agents_to_messages = {agent_a: {Connection.IN: [],
-                                          Connection.OUT: []},
-                                agent_b: {Connection.IN: [],
-                                          Connection.OUT: []}}
+                                             Connection.OUT: []},
+                                   agent_b: {Connection.IN: [],
+                                             Connection.OUT: []}}
 
     def send(self, agent, data):
         massages = self._get_messages(agent, Connection.IN)
@@ -137,7 +149,7 @@ class Connection(Entity):
             msg = in_list.pop()
             bytes = msg.transmit(bytes)
             if msg.is_transmitted():
-                out_list.insert(0,msg)
+                out_list.insert(0, msg)
             else:
                 in_list.append(msg)
 

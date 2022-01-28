@@ -1,4 +1,6 @@
 from utils.stats import Stats
+
+
 def test_simple_stat():
     stats = Stats()
     stat = stats.get("TestStat")
@@ -8,6 +10,7 @@ def test_simple_stat():
     stat.gather(3)
 
     assert 3 == len(stat.values())
+
 
 def test_more_stats():
     stats = Stats()
