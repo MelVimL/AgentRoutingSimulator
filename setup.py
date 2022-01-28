@@ -6,7 +6,7 @@ setup(
     license='GLP3',
     description='TYPE YOUR DESCRIPTION HERE',
     author='Melvyn Linke',
-    author_email='melvynl@hotmail.de',   
+    author_email='Melvyn.linke@web.de',   
     url='https://github.com/user/reponame',
     download_url='https://github.com/user/reponame/archive/v_01.tar.gz',
     keywords=['Multi Agent Systems', 'Networking', 'Simulation'],
