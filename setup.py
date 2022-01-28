@@ -6,13 +6,14 @@ setup(
     license='GLP3',
     description='TYPE YOUR DESCRIPTION HERE',
     author='Melvyn Linke',
-    author_email='your.email@domain.com',   
+    author_email='melvynl@hotmail.de',   
     url='https://github.com/user/reponame',
     download_url='https://github.com/user/reponame/archive/v_01.tar.gz',
-    keywords=['SOME', 'MEANINGFULL', 'KEYWORDS'],
+    keywords=['Multi Agent Systems', 'Networking', 'Simulation'],
     install_requires=[     
-        'validators',
-        'beautifulsoup4',
+        'networkx',
+        'pytest',
+        'numpy'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

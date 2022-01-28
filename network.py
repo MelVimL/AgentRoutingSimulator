@@ -1,4 +1,6 @@
 import networkx as nx
+from utils.datastructures import SpaceStorage, KDTree 
+
 
 class Network():
     """
@@ -7,9 +9,11 @@ class Network():
     
     def __init__(self) -> None:
         self.graph: nx.Graph = nx.Graph()
+        self.space: SpaceStorage = KDTree()
     
     def add_agent(self, agent):
         self.graph.add_node(agent)
+        self.space.put(agent)
 
     def get_agents(self):
         """
@@ -20,6 +24,7 @@ class Network():
     def connect(self, agent_a, agent_b, connection):
         agent_a.set_network(self)
         agent_b.set_network(self)
+    
         connection.set_network(self)
         
         self.graph.add_edge(agent_a, agent_b, connection=connection)
