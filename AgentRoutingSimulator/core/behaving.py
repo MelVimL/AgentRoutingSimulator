@@ -13,13 +13,12 @@ class Behaving:
     def add_behavior(self, behavior, priority=1):
         behavior.set_behaving(self)
         self.behavior_map.setdefault(priority, []).append(behavior)
-    
+
     def remove_behavior(self, behavior_type):
-         for key in sorted(self.behavior_map):
+        for key in sorted(self.behavior_map):
             for i, behavior in self.behavior_map.get(key):
                 if type(behavior) == behavior_type:
-                    self.behavior_map.get(key).pop(i)   
-    
+                    self.behavior_map.get(key).pop(i)
+
     def get_environment(self):
         return self.environment
-

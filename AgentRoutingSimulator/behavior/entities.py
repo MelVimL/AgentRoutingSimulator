@@ -30,3 +30,13 @@ class ExponetialDecay(Behavior):
             self.value = 0
         
         return super().update(time_step)
+
+class FunctionBahvior(Behavior):
+    def __init__(self, function, config={}) -> None:
+        self.function = function
+        self.config = config
+        super().__init__()
+
+    def update(self, time_step):
+        self.function(time_step, self.enironment, self.config)
+        return super().update(time_step)

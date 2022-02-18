@@ -61,7 +61,8 @@ class SimpleWireless(ConnectionBehavior):
 
             distance = distance_of_agents(a, b)
             signal_strength = -(1/self.max_range)*distance**2+1
-            throughput = round(bandwidth_per_agent * signal_strength * self.time_step_length)
+            throughput = round(bandwidth_per_agent *
+                               signal_strength * self.time_step_length)
 
             connection.transfer_bytes(a, b, throughput)
 

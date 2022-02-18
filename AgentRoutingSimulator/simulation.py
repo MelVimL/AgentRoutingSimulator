@@ -1,7 +1,7 @@
-from AgentRoutingSimulator.core.entities import EntityScheduler
-from AgentRoutingSimulator.core.entities import Agent, Connection
-from AgentRoutingSimulator.network import SimpleNetwork
-from AgentRoutingSimulator.utils.stats import Stats
+from core.entities import EntityScheduler
+from core.entities import Agent, Connection
+from network import Network
+from utils.stats import Stats
 
 
 class SimpleSimulation:
@@ -12,7 +12,7 @@ class SimpleSimulation:
     def __init__(self) -> None:
         self.stats = Stats()
         self.entity_scheduler = EntityScheduler()
-        self.network = SimpleNetwork()
+        self.network = Network()
         self.time_step = 0
 
     def update(self):
