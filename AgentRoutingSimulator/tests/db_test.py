@@ -1,5 +1,6 @@
 import pytest
-from db import get_session, Simulation, Stat, StatType
+from db.schema import Simulation, Stat, StatType
+from db.api import get_session
 
 test_connection = "sqlite://"
 

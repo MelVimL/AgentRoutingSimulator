@@ -1,4 +1,3 @@
-from ast import For
 from sqlalchemy import ForeignKey, JSON, Column, DateTime, Float, Integer, String, create_engine
 from sqlalchemy.orm import Session, relationship
 from sqlalchemy.ext.declarative import declarative_base
@@ -14,6 +13,7 @@ class Simulation(Base):
     name = Column(String)
     start_datetime = Column(DateTime)
     end_datetime = Column(DateTime)
+    current_time_step = Column(Integer)
     config = Column(JSON)
 
     stats = relationship("Stat", back_populates="simulation")
@@ -66,11 +66,3 @@ class Stat(Base):
     simulation_id = Column(Integer, ForeignKey("Simulation.id"))
 
 
-def get_session(connection_string):
-    global _engine
-
-    if _engine is None:
-        _engine = create_engine(connection_string, encoding="UTF-8", echo=True)
-        Base.metadata.create_all(_engine)
-
-    return Session(_engine)
