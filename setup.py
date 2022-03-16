@@ -13,7 +13,8 @@ setup(
     install_requires=[     
         'networkx',
         'pytest',
-        'numpy'
+        'numpy',
+        'pyyaml'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

@@ -1,0 +1,11 @@
+Simulation:
+  name: "TestSim1"
+  epoch_delta: 2
+  epoch_max: 
+Agent:
+  test_param: True
+Connection:
+  test_param: True
+Network:
+  net_test_param: True
+  

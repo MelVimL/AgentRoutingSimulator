@@ -1,7 +1,7 @@
 {
     "python.pythonPath": "venv\\Scripts\\python.exe",
     "python.testing.pytestArgs": [
-        "."
+        "./AgentRoutingSimulator/tests"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,

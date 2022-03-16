@@ -9,8 +9,7 @@ def create_simple_network(size):
     agents = (Agent(Position(i, i)) for i in range(size))
 
     for agent, other_agent in permutations(agents, 2):
-        connection = Connection(agent_a=agent, agent_b=other_agent)
-        network.connect(agent_a=agent, agent_b=other_agent, connection=connection)
+        network.connect(agent, other_agent, connection=Connection())
     
     return network
 
@@ -22,7 +21,7 @@ def test_connection():
     network = Network()
     agent_a = Agent(Positions.DOWN)
     agent_b = Agent(Positions.UP)
-    c = Connection(agent_a=agent_a, agent_b=agent_b)
+    c = Connection()
     #Here you can add Behaviors
 
     network.connect(agent_a=agent_a, agent_b=agent_b, connection=c)

@@ -27,6 +27,21 @@ class EntityScheduler:
         """
         """
         self._entities.setdefault(priority, []).append(entity)
+    
+    def add_all(self, entities: list[Entity], priority: int = 0):
+        """
+        """
+        for entity in entities:
+            self.add(entity=entity, priority=priority)
+
+    def get_all(self):
+        result = []
+        
+        for priority in sorted(self._entities.keys()):
+            for entity in self._entities.get(priority):
+                result.append(entity) 
+        
+        return result
 
     def remove(self, entity: Entity):
         """
@@ -62,8 +77,9 @@ class Agent(Entity, NetworkAccess):
     In addition add contrains to memory usage and computing cycles.
     """
 
-    def __init__(self, position: Position = Positions.ZERO, network: Network = None, environment: dict = {}) -> None:
+    def __init__(self, position: Position =Positions.ZERO, network: Network =None, environment: dict ={}, config: dict ={}) -> None:
         super().__init__()
+        self.config = config
         self.position = position
         self.network = network
         self.environment = environment
@@ -117,14 +133,18 @@ class Connection(Entity, NetworkAccess):
         def is_transmitted(self):
             return self.to_send == 0
 
-    def __init__(self, agent_a, agent_b, network=None, environment={}) -> None:
+    def __init__(self, *agents, network=None, config={}) -> None:
         super().__init__()
-        self.environment: dict = environment
+        self.config: dict = config
         self.network: Network = network
-        self.agents_to_messages = {agent_a: {Connection.IN: [],
-                                             Connection.OUT: []},
-                                   agent_b: {Connection.IN: [],
-                                             Connection.OUT: []}}
+        self.agents_to_messages = {}
+
+        for agent in agents:
+            self.set_agent(agent)
+
+    def set_agent(self, agent: Agent):
+        self.agents_to_messages.update({agent: {Connection.IN: [],
+                                               Connection.OUT: []}})
 
     def send(self, agent, data):
         massages = self._get_messages(agent, Connection.IN)
