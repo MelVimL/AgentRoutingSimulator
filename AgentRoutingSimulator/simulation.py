@@ -41,9 +41,17 @@ class SimpleSimulation(Indentifiable):
     def get_network(self) -> Network:
         return self.network
     
-    def add_network(self, network: Network) -> None:
+    def set_network(self, network: Network) -> None:
         self.network = network
-        
+        self.get_entity_scheduler().add_all(self.get_agents())
+        self.get_entity_scheduler().add_all(self.get_connections())
+    
+    def get_agents(self) -> list[Agent]:
+        return self.get_network().get_agents()
+
+    def get_connections(self) -> list[Connection]:
+        return self.get_network().get_all_connections()
+
     def get_entity_scheduler(self)-> EntityScheduler:
         return self.entity_scheduler
 

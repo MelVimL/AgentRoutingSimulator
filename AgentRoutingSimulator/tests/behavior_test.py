@@ -2,7 +2,7 @@ from core.entities import Connection, Agent
 from tests.utils import EmptyEnity
 from utils.spatial import Positions
 from behavior.entities import LinearDecay, ExponetialDecay
-from behavior.connections import  SimpleWireless
+from behavior.connections import SimpleWireless
 from behavior.agents import SimpleReceiver, SimpleSender
 from network import Network
 
@@ -42,12 +42,12 @@ def test_simple_Wireless():
     a.add_behavior(s)
     b.add_behavior(r)
 
-    c = Connection(a,b)
+    c = Connection(a, b)
     w = SimpleWireless()
     
     c.add_behavior(w)
 
-    net.connect(a,b,c)
+    net.connect(a, b, c)
 
     s.create_message(200)
     # Updates Entities

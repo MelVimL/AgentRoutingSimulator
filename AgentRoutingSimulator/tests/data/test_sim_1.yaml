@@ -4,8 +4,18 @@ Simulation:
   epoch_max: 
 Agent:
   test_param: True
+  Behavior:
+    QRouting:
+      alpha: 0.5
+      beta: 0.5
+      delta: 0.5
+      default_q_value: 0.0
 Connection:
   test_param: True
+  Behavior:
+    QRouting:
+      Test: 123
+    
 Network:
   net_test_param: True
   

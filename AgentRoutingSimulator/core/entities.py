@@ -4,7 +4,7 @@ from utils.common import Indentifiable
 from utils.spatial import Position, Positions
 from dataclasses import dataclass
 from network import Network
-from queue import Queue
+import json
 
 
 class EntityScheduler:
@@ -27,7 +27,7 @@ class EntityScheduler:
         """
         """
         self._entities.setdefault(priority, []).append(entity)
-    
+
     def add_all(self, entities: list[Entity], priority: int = 0):
         """
         """
@@ -36,11 +36,11 @@ class EntityScheduler:
 
     def get_all(self):
         result = []
-        
+
         for priority in sorted(self._entities.keys()):
             for entity in self._entities.get(priority):
-                result.append(entity) 
-        
+                result.append(entity)
+
         return result
 
     def remove(self, entity: Entity):
@@ -49,8 +49,8 @@ class EntityScheduler:
         for priority in sorted(self._entities.keys()):
             try:
                 self._entities.get(priority).remove(entity)
-            except ValueError as e:
-                pass
+            except ValueError:
+                break
 
 
 class Entity(Indentifiable, Behaving):
@@ -77,7 +77,10 @@ class Agent(Entity, NetworkAccess):
     In addition add contrains to memory usage and computing cycles.
     """
 
-    def __init__(self, position: Position =Positions.ZERO, network: Network =None, environment: dict ={}, config: dict ={}) -> None:
+    def __init__(self, position: Position = Positions.ZERO,
+                 network: Network = None,
+                 environment: dict = {},
+                 config: dict = {}) -> None:
         super().__init__()
         self.config = config
         self.position = position
@@ -112,14 +115,23 @@ class Connection(Entity, NetworkAccess):
 
     @dataclass
     class Message:
+        FAKE_PAYLOAD = "_fake_payload"
+        FAKE_OVERHEAD = "_fake_overhead"
         data: bytes
         size: int
         to_send: int
 
-        def __init__(self, data) -> None:
+        def __init__(self, data: bytes) -> None:
             self.data = data
-            self.size = len(data)
+            self._fake_payload = self.size_of_fake(data, self.FAKE_PAYLOAD)
+            self._fake_overhead = self.size_of_fake(data, self.FAKE_OVERHEAD)
+            self.size = len(json.dumps(data)) + \
+                self._fake_overhead + self._fake_payload
             self.to_send = self.size
+
+        def size_of_fake(self, data, fake_type):
+            json_nois = 3
+            return json_nois + data.get(fake_type, -json_nois)
 
         def transmit(self, bytes):
             if bytes >= self.to_send:
@@ -144,9 +156,9 @@ class Connection(Entity, NetworkAccess):
 
     def set_agent(self, agent: Agent):
         self.agents_to_messages.update({agent: {Connection.IN: [],
-                                               Connection.OUT: []}})
+                                                Connection.OUT: []}})
 
-    def send(self, agent, data):
+    def send(self, agent, data: dict):
         massages = self._get_messages(agent, Connection.IN)
         massages.insert(0, Connection.Message(data))
 
@@ -157,11 +169,18 @@ class Connection(Entity, NetworkAccess):
         messages = self._get_messages(agent, Connection.OUT)
         return bool(messages)
 
-    def receive(self, agent):
+    def receive(self, agent) -> dict:
         messages = self._get_messages(agent, Connection.OUT)
         return messages.pop().data
 
-    def transfer_bytes(self, source, target, bytes):
+    def view_message(self, source):
+        in_list = self._get_messages(source, Connection.IN)
+        msg = in_list.pop()
+        in_list.append(msg)
+
+        return msg
+
+    def transfer_bytes(self, source, target, bytes: bytes):
         in_list = self._get_messages(source, Connection.IN)
         out_list = self._get_messages(target, Connection.OUT)
 

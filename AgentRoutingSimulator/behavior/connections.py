@@ -1,11 +1,11 @@
 from core.entities import Connection
 from core.behavior import Behavior
+from utils.spatial import distance_of_agents
 from math import pi, pow
 from itertools import permutations
 
 
-def distance_of_agents(a, b):
-    return a.get_position().distance(b.get_position())
+
 
 
 class ConnectionBehavior(Behavior):
@@ -57,6 +57,7 @@ class SimpleWireless(ConnectionBehavior):
         agents = connection.get_participants()
         agents_with_messages = [(a, b) for a, b in permutations(agents, 2)]
         bandwidth_per_agent = self.max_bandwidth/len(agents_with_messages)
+        
         for a, b in agents_with_messages:
 
             distance = distance_of_agents(a, b)

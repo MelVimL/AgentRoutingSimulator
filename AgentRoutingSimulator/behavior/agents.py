@@ -43,7 +43,7 @@ class SimpleSender(AgentBehavior):
             self.send()
 
     def create_message(self, size):
-        data = bytes(size)
+        data = {"data" : "a"*(size)}
         self.queue.put(data)
 
     def send(self):

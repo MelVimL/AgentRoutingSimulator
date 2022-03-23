@@ -1,6 +1,8 @@
 from __future__ import annotations
 from math import sqrt
 
+def distance_of_agents(a, b):
+    return a.get_position().distance(b.get_position())
 
 class Position:
 

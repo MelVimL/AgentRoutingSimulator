@@ -8,5 +8,9 @@
     "python.testing.pytestEnabled": true,
     "python.testing.nosetestArgs": [
         "./AgentRoutingSimulation/"
-    ]
+    ],
+    "python.linting.pylintEnabled": false,
+    "python.linting.enabled": true,
+    "python.defaultInterpreterPath": "./venv/Scripts/python.exe",
+    "python.linting.flake8Enabled": true
 }

@@ -1,4 +1,4 @@
-
+import json
 
 from core.entities import Agent, Connection
 from behavior.connections import Wireless
@@ -15,11 +15,13 @@ def test_simple_connection_behavior():
 def test_simple_connection_message_queue_in_out():
     a = Agent()
     b = Agent()
+    message_a = {"test_message":"test"}
+    message_b = {"test_message": "test"*500}
     connection = Connection(a, b)
-    connection.send(a, bytes(20))
-    connection.send(b, bytes(2000))
+    connection.send(a, message_a)
+    connection.send(b, message_b)
 
-    connection.transfer_bytes(a, b, 20)
-    connection.transfer_bytes(b, a, 1999)
+    connection.transfer_bytes(a, b, len(json.dumps(message_a)))
+    connection.transfer_bytes(b, a, len(json.dumps(message_a))-1)
 
     assert connection.has_message(b) and not connection.has_message(a)
