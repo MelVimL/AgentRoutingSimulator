@@ -105,6 +105,12 @@ class Agent(Entity, NetworkAccess):
         """
         pass
 
+    def __repr__(self) -> str:
+        return str(self.get_id())
+
+    def __str__(self) -> str:
+        return "Agent({})".format(self.__repr__())
+
 
 class Connection(Entity, NetworkAccess):
     """

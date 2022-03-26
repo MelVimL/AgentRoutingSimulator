@@ -22,7 +22,7 @@ class Network():
         self.graph.add_node(agent)
         self.space.put(agent)
 
-    def get_agents(self)-> list[Agent]:
+    def get_agents(self) -> list[Agent]:
         return self.graph.nodes
 
     def connect(self, agent_a: Agent, agent_b: Agent, connection: Connection) -> None:
@@ -47,6 +47,9 @@ class Network():
     def get_space(self) -> SpaceStorage:
         return self.space
 
+    def get_neighbors(self, agent) -> list:
+        return [x for x in self.graph.neighbors(agent)]
+        
     def debug_plt(self) -> None:
         import networkx as nx
         import matplotlib.pyplot as plt

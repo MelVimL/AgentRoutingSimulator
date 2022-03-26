@@ -7,7 +7,7 @@
     "python.testing.nosetestsEnabled": false,
     "python.testing.pytestEnabled": true,
     "python.testing.nosetestArgs": [
-        "./AgentRoutingSimulation/"
+        "./AgentRoutingSimulation/tests"
     ],
     "python.linting.pylintEnabled": false,
     "python.linting.enabled": true,

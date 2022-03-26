@@ -2,19 +2,10 @@ import pytest
 
 from core.entities import Agent, Connection
 from examples.qrouting import QRoutingAgent
-from utils.config import ConfigLoader
+
 from utils.spatial import Position
 from network import Network
 
-CONFIG_PATH_1 = "AgentRoutingSimulator/tests/data/test_sim_1.yaml"
-
-
-@pytest.fixture
-def config():
-    """
-    """
-    ConfigLoader.set_path(CONFIG_PATH_1)
-    return ConfigLoader.load()
 
 @pytest.fixture
 def net(config) -> Network:
@@ -42,8 +33,8 @@ def test_estimation_value(net: Network):
     agents = [x for x in net.get_agents()]
     for agent in agents:
         agent.add_behavior(QRoutingAgent(config={}))
-    from_agent = agents[0]
+    from_behavior = agents[0].get_behavior(QRoutingAgent)
     to_agent = agents[-1]
-    assert from_agent.get_behavior(QRoutingAgent).neigbor_estimation(to_agent.get_id(), 1., 1., [])
 
+    assert from_behavior.neigbor_estimation(to_agent, []) == 0.0
 
