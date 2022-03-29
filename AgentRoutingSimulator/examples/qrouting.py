@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+from uuid import uuid1
 if TYPE_CHECKING:
     from core.entities import Agent
 from dataclasses import dataclass
@@ -9,7 +10,6 @@ from behavior.agents import AgentBehavior
 @dataclass
 class QMessage():
     id: str
-    type: str
     destination: str
     sender: str
     _fake_payload: int
@@ -90,7 +90,7 @@ class QRoutingAgent(AgentBehavior):
             pass
         else:
             self.send_message(message)
-    
+
     def send_reply(self, message):
         pass
 
@@ -113,15 +113,18 @@ class QRoutingAgent(AgentBehavior):
         return False
 
     def send_message(self, message: QMessage):
-        destination = message.get_destination()
-        neigbors = self.get_neigbors()
+        agent = self.get_agent()
+        destination = message.destination
+        neigbors = self.get_neighbors()
         next_hop = self.select_best_choice(neigbors, destination)
 
         q = len(self.messages)
-        t = self.neigbor_estimation(destination, next_hop)
+        t = self.neigbor_estimation_request(destination, next_hop)
         old_q = self.quality_func(destination, next_hop)
-        q_update = QUpdate(q=q, t=t, old_q=old_q)
-        self.updates.update({self.message.id: q_update})
+        q_update = QUpdate(sender=str(agent),
+                           destination=destination,
+                           q=q, t=t, old_q=old_q)
+        self.updates.append(q_update)
 
         self.send(message, next_hop)
 
@@ -140,11 +143,12 @@ class QRoutingAgent(AgentBehavior):
         return destination_table.setdefault(next_hop, self.default_q)
 
     def neigbor_estimation_request(self, destination: str, next_hop: Agent):
-        behavior = next_hop.get_behavior(QRoutingAgent())
-        behavior.neigbor_estimation(destination, self.beta, self.delta, [
-                                    self.get_agent().get_id()])
+        behavior = next_hop.get_behavior(QRoutingAgent)
+        behavior.neigbor_estimation(destination, [self.get_agent()])
 
-    def neigbor_estimation(self, destination: str, already_visited: list[str]) -> float:
+    def neigbor_estimation(self,
+                           destination: str,
+                           already_visited: list[str] = []) -> float:
         params = {"destination": destination,
                   "already_visited": list(already_visited)}
         this_agent = self.get_agent()
@@ -171,9 +175,17 @@ class QRoutingAgent(AgentBehavior):
                 result.append(e)
 
         return result
-    
+
+    def generate_message(self, destination: Agent, size: int):
+        sender_id = str(self.get_agent())
+        destination_id = str(destination)
+        return QMessage(id=str(uuid1()),
+                        destination=destination_id,
+                        sender=sender_id,
+                        _fake_payload=size)
+
     def select_min(self, neigbors, destination):
-        return min(neigbors, lambda x: self.quality_func(destination, x))
+        return min(neigbors, key=lambda x: self.quality_func(destination, x))
 
     def select_best_choice(self, neigbors, destination):
         return self.select_min(neigbors, destination)

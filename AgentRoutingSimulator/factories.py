@@ -1,8 +1,11 @@
 from core.entities import Agent, Connection
 from network import Network
 from utils.spatial import Position
+from examples.qrouting import QRoutingAgent
+from behavior.connections import SimpleWireless
+
+
 class ConnectionFactory:
-    
 
     @staticmethod
     def create_wireless_connection():
@@ -11,10 +14,30 @@ class ConnectionFactory:
         connection.add_behavior()
         return connection
 
+    @staticmethod
+    def generate_simple_wireless_func(config):
+        behavior_conf = config.get("Behavior")
+
+        def func():
+            c = Connection(config=config)
+            c.add_behavior(SimpleWireless(behavior_conf.get("SimpleWireless")))
+            return c
+
+        return func
 
 
 class AgentFactory:
-    pass
+    @staticmethod
+    def generate_q_routing_agent_func(config):
+        agent_config = config
+        agent_behavior = config.get("Behavior")
+
+        def func(position: Position):
+            a = Agent(position=position, config=agent_config)
+            a.add_behavior(QRoutingAgent(agent_behavior.get("QRoutingAgent")))
+            return a
+
+        return func
 
 
 class NetworkFactory:
@@ -30,7 +53,7 @@ class NetworkFactory:
         agents.append(Agent(Position(2., 3.)))
         agents.append(Agent(Position(3., 2.)))
         agents.append(Agent(Position(2., 1.)))
-        
+
         agents.append(Agent(Position(4., 2.)))
         agents.append(Agent(Position(5., 3.)))
         agents.append(Agent(Position(6., 2.)))
@@ -48,4 +71,4 @@ class NetworkFactory:
         net.connect(agents[7], agents[8], Connection(agents[7], agents[8]))
         net.connect(agents[8], agents[5], Connection(agents[8], agents[5]))
 
-        #net.debug_plt()
+        # net.debug_plt()

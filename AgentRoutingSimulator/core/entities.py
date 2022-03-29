@@ -73,7 +73,8 @@ class NetworkAccess:
 
 class Agent(Entity, NetworkAccess):
     """
-    An Agent is an Entity that have spatial position and is a part of a Network.
+    An Agent is an Entity that have spatial position and is a part of a
+    Network.
     In addition add contrains to memory usage and computing cycles.
     """
 
@@ -114,7 +115,7 @@ class Agent(Entity, NetworkAccess):
 
 class Connection(Entity, NetworkAccess):
     """
-    A connection is an Enity which is 
+    A connection is an Enity which is
     """
     IN = "IN"
     OUT = "OUT"

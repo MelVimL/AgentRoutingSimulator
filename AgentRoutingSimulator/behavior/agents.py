@@ -1,5 +1,5 @@
 from core.behavior import Behavior
-from core.entities import Agent, Connection
+from core.entities import Agent
 from queue import Queue
 
 
@@ -42,11 +42,11 @@ class SimpleSender(AgentBehavior):
         while not self.queue.empty():
             self.send()
 
-    def create_message(self, size):
-        data = {"data" : "a"*(size)}
+    def create_message(self, size: int) -> None:
+        data = {"data": "a"*(size)}
         self.queue.put(data)
 
-    def send(self):
+    def send(self) -> None:
         agent = self.get_agent()
         net = agent.get_network()
         connections = net.get_connections(agent)

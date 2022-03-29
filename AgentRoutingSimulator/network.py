@@ -1,8 +1,8 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Type
 if TYPE_CHECKING:
     from core.entities import Connection, Agent
-
+from utils.spatial import Position
 
 import networkx as nx
 from utils.datastructures import SpaceStorage, KDTree
@@ -23,9 +23,19 @@ class Network():
         self.space.put(agent)
 
     def get_agents(self) -> list[Agent]:
-        return self.graph.nodes
+        return list(self.graph)
 
-    def connect(self, agent_a: Agent, agent_b: Agent, connection: Connection) -> None:
+    def connect(self,
+                agent_a: Agent,
+                agent_b: Agent,
+                connection: Connection) -> None:
+        self._bind_agents_to_connection(agent_a, agent_b, connection)
+        self.graph.add_edge(agent_a, agent_b, connection=connection)
+
+    def _bind_agents_to_connection(self,
+                                   agent_a: Agent,
+                                   agent_b: Agent,
+                                   connection: Connection) -> None:
         agent_a.set_network(self)
         agent_b.set_network(self)
 
@@ -33,32 +43,58 @@ class Network():
         connection.set_agent(agent_a)
         connection.set_agent(agent_b)
 
-        self.graph.add_edge(agent_a, agent_b, connection=connection)
-
     def get_all_connections(self) -> list[Connection]:
         return [x[2] for x in self.graph.edges.data("connection", None)]
 
     def get_connections(self, agent) -> list[Connection]:
-        return [self.graph.get_edge_data(agent, x)["connection"] for x in self.graph.neighbors(agent)]
+        result = []
+        graph = self.graph
+
+        for other_agent in graph.neighbors(agent):
+            connection = graph.get_edge_data(agent, other_agent)["connection"]
+            result.append(connection)
+
+        return result
 
     def get_graph(self) -> nx.Graph:
         return self.graph
+
+    def set_graph(self, graph) -> None:
+        self.graph = graph
+
+    def generate_graph(self,
+                       graph_scheme: nx.Graph,
+                       a_gen_func,
+                       c_gen_func):
+        self.set_graph(nx.empty_graph())
+        positions = nx.spring_layout(graph_scheme)
+        id_agent_map = {}
+        for node in graph_scheme.nodes:
+            x, y = positions.get(node)
+            id_agent_map.update({node: a_gen_func(Position(x, y))})
+        
+        for edge in graph_scheme.edges:
+            a_key, b_key = edge
+            a = id_agent_map.get(a_key)
+            b = id_agent_map.get(b_key)
+            c = c_gen_func()
+            self.connect(a, b, c)
 
     def get_space(self) -> SpaceStorage:
         return self.space
 
     def get_neighbors(self, agent) -> list:
         return [x for x in self.graph.neighbors(agent)]
-        
+
     def debug_plt(self) -> None:
         import networkx as nx
         import matplotlib.pyplot as plt
 
-        #pos = nx.spring_layout(self.graph)
         pos = {x: x.get_position().to_tuple() for x in self.graph.nodes}
         nx.draw(self.graph, pos, with_labels=True,
                 connectionstyle='arc3, rad = 0.1')
-        edge_labels = dict([((u, v,), d['connection'])
-                           for u, v, d in self.graph.edges(data=True)])
 
         plt.show()
+
+    def __len__(self):
+        return len(self.get_agents())

@@ -37,21 +37,21 @@ def net(config) -> Network:
 def test_simple_config(config: dict, net: Network):
     sim = SimpleSimulation(config=config.get("Simulation"))
     sim.set_network(net)
-
-    assert all(x.config.get("test_param", False) for x in sim.get_entity_scheduler(
-    ).get_all()) and net.config.get("net_test_param")
+    entities = sim.get_entity_scheduler().get_all()
+    params_set = [x.config.get("test_param", False) for x in entities]
+    assert all(params_set) and net.config.get("net_test_param")
 
 
 def test_simple_q_simulation(config, net: Network):
 
     sim = SimpleSimulation(config=config.get("Simulation"))
     sim.set_network(net)
-    agent_behavior_config = config.get("Agent").get("Behavior").get("QRouting")
+    a_behavior_conf = config.get("Agent").get("Behavior").get("QRoutingAgent")
     connection_behavior_config = config.get(
-        "Connection").get("Behavior").get("QRouting")
+        "Connection").get("Behavior").get("SimpleWireless")
 
     for agent in sim.get_agents():
-        agent.add_behavior(QRoutingAgent(config=agent_behavior_config))
+        agent.add_behavior(QRoutingAgent(config=a_behavior_conf))
 
     for connection in sim.get_connections():
         connection.add_behavior(SimpleWireless(

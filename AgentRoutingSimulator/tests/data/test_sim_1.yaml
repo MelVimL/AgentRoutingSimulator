@@ -5,7 +5,7 @@ Simulation:
 Agent:
   test_param: True
   Behavior:
-    QRouting:
+    QRoutingAgent:
       alpha: 0.5
       beta: 0.5
       delta: 0.5
@@ -13,7 +13,7 @@ Agent:
 Connection:
   test_param: True
   Behavior:
-    QRouting:
+    SimpleWireless:
       Test: 123
     
 Network:
