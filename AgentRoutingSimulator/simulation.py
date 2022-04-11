@@ -2,9 +2,10 @@ from core.entities import EntityScheduler
 from core.entities import Agent, Connection
 from utils.common import Indentifiable
 from network import Network
-from utils.stats import Stats
+from factories import StatsFactory
 from db.api import init_session as init_db
 from db.api import SimulationAPI as db
+
 
 class SimpleSimulation(Indentifiable):
     """
@@ -16,7 +17,7 @@ class SimpleSimulation(Indentifiable):
         self.name = name
         self.network = Network()
         self.simulation_key = db.create_simulation(str(self), config)
-        self.stats = Stats(self.simulation_key)
+        self.stats = StatsFactory.create(self.simulation_key)
         self.entity_scheduler = EntityScheduler()
 
     def update(self):
@@ -37,23 +38,23 @@ class SimpleSimulation(Indentifiable):
 
     def store_replay(self):
         pass
-    
+
     def get_network(self) -> Network:
         return self.network
-    
+
     def set_network(self, network: Network) -> None:
         self.network = network
         self.get_entity_scheduler().add_all(self.get_agents())
         self.get_entity_scheduler().add_all(self.get_connections())
-    
+
     def get_agents(self) -> list[Agent]:
         return self.get_network().get_agents()
 
     def get_connections(self) -> list[Connection]:
         return self.get_network().get_all_connections()
 
-    def get_entity_scheduler(self)-> EntityScheduler:
+    def get_entity_scheduler(self) -> EntityScheduler:
         return self.entity_scheduler
 
     def __str__(self) -> str:
-        return "Simulation_{}({})".format(self.name, str(self.get_id())) 
+        return "Simulation_{}({})".format(self.name, str(self.get_id()))

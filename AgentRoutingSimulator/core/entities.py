@@ -107,10 +107,7 @@ class Agent(Entity, NetworkAccess):
         pass
 
     def __repr__(self) -> str:
-        return str(self.get_id())
-
-    def __str__(self) -> str:
-        return "Agent({})".format(self.__repr__())
+        return f"Agent({self.get_id()})"
 
 
 class Connection(Entity, NetworkAccess):
@@ -199,5 +196,5 @@ class Connection(Entity, NetworkAccess):
             else:
                 in_list.append(msg)
 
-    def get_participants(self):
-        return self.agents_to_messages.keys()
+    def get_participants(self) -> list(Agent):
+        return [a for a in self.agents_to_messages.keys()]

@@ -1,24 +1,29 @@
 import pytest
 import networkx.generators.classic as nxg_classic
+from examples.qrouting import QRoutingAgent
 from core.entities import Agent, Connection
 from utils.config import ConfigLoader
 from utils.spatial import Position
 from network import Network
+from simulation import SimpleSimulation
 from factories import AgentFactory, ConnectionFactory
 
 CONFIG_PATH_1 = "AgentRoutingSimulator/tests/data/test_sim_1.yaml"
+
+
+def config_load():
+    ConfigLoader.set_path(CONFIG_PATH_1)
+    return ConfigLoader.load()
 
 
 @pytest.fixture
 def config():
     """
     """
-    ConfigLoader.set_path(CONFIG_PATH_1)
-    return ConfigLoader.load()
+    return config_load()
 
 
-@pytest.fixture
-def net(config) -> Network:
+def hand_made_net(config) -> Network:
     """
     """
     net = Network(config=config.get("Network"))
@@ -38,13 +43,73 @@ def net(config) -> Network:
 
 
 @pytest.fixture
+def sim(config):
+    sim = SimpleSimulation(config=config.get("Simulation", {}))
+    net = hand_made_net(config)
+    sim.set_network(net)
+    return sim
+
+
+@pytest.fixture
+def big_sim(config):
+    sim = SimpleSimulation(config=config.get("Simulation", {}))
+    net = big_q_binomial_tree(config)
+    sim.set_network(net)
+    return sim
+
+
+def medium_sim_load(config):
+    sim = SimpleSimulation(config=config.get("Simulation", {}))
+    net = medium_q_dorogovtsev_goltsev_mendes_graph(config)
+    sim.set_network(net)
+    return sim
+
+
+@pytest.fixture
+def medium_sim(config):
+    return medium_sim_load(config)
+
+
+@pytest.fixture
+def small_sim(config):
+    sim = SimpleSimulation(config=config.get("Simulation", {}))
+    net = small_q_binomial_tree(config)
+    sim.set_network(net)
+    return sim
+
+
+def small_q_binomial_tree(config):
+    net = Network()
+    a_conf = config.get("Agent")
+    c_conf = config.get("Connection")
+    a_func = AgentFactory.create_mono_behavior(QRoutingAgent, a_conf)
+    c_func = ConnectionFactory.generate_simple_wireless_func(c_conf)
+
+    net.generate_graph(nxg_classic.binomial_tree(2), a_func, c_func)
+
+    return net
+
+
 def big_q_binomial_tree(config):
     net = Network()
     a_conf = config.get("Agent")
     c_conf = config.get("Connection")
-    a_func = AgentFactory.generate_q_routing_agent_func(a_conf)
+    a_func = AgentFactory.create_mono_behavior(QRoutingAgent, a_conf)
     c_func = ConnectionFactory.generate_simple_wireless_func(c_conf)
 
     net.generate_graph(nxg_classic.binomial_tree(10), a_func, c_func)
+
+    return net
+
+
+def medium_q_dorogovtsev_goltsev_mendes_graph(config):
+    net = Network()
+    a_conf = config.get("Agent")
+    c_conf = config.get("Connection")
+    a_func = AgentFactory.create_mono_behavior(QRoutingAgent, a_conf)
+    c_func = ConnectionFactory.generate_simple_wireless_func(c_conf)
+
+    net.generate_graph(
+        nxg_classic.dorogovtsev_goltsev_mendes_graph(3), a_func, c_func)
 
     return net

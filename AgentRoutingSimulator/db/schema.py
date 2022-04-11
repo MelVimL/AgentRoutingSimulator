@@ -1,5 +1,5 @@
-from sqlalchemy import ForeignKey, JSON, Column, DateTime, Float, Integer, String, create_engine
-from sqlalchemy.orm import Session, relationship
+from sqlalchemy import ForeignKey, JSON, Column, DateTime, Float, Integer, String
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()

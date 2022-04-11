@@ -1,8 +1,29 @@
+from __future__ import annotations
+from utils.stats import Stats
 from core.entities import Agent, Connection
 from network import Network
 from utils.spatial import Position
-from examples.qrouting import QRoutingAgent
+
 from behavior.connections import SimpleWireless
+
+
+class StatsFactory:
+    _stats: Stats = None
+
+    @staticmethod
+    def create(simulation_id=None) -> Stats:
+        if simulation_id is None and StatsFactory._stats is not None:
+            pass
+        elif simulation_id and not StatsFactory._stats:
+            StatsFactory._stats = Stats(simulation_id)
+        elif simulation_id and StatsFactory._stats:
+            if StatsFactory._stats._simulation_id != simulation_id:
+                id = StatsFactory._stats._simulation_id
+                raise ValueError(f"Stats is initlized with {id}.")
+        elif not simulation_id and not StatsFactory._stats:
+            raise ValueError(
+                "Stats not initlized. Please provide the Simulation_id.")
+        return StatsFactory._stats
 
 
 class ConnectionFactory:
@@ -13,6 +34,22 @@ class ConnectionFactory:
         connection.add_behavior()
         connection.add_behavior()
         return connection
+
+    @staticmethod
+    def create_mono_behavior(behavior_type, config={}):
+        behavior_conf = config.get("Behavior")
+
+        def func():
+            c = Connection(config=config)
+            behavior_name = behavior_type.__name__
+            c.add_behavior(behavior_type(behavior_conf.get(behavior_name)))
+            return c
+
+        return func
+
+    @staticmethod
+    def create_multi_behavior():
+        pass
 
     @staticmethod
     def generate_simple_wireless_func(config):
@@ -28,13 +65,13 @@ class ConnectionFactory:
 
 class AgentFactory:
     @staticmethod
-    def generate_q_routing_agent_func(config):
-        agent_config = config
-        agent_behavior = config.get("Behavior")
+    def create_mono_behavior(behavior_type, config={}):
+        behavior_conf = config.get("Behavior")
 
-        def func(position: Position):
-            a = Agent(position=position, config=agent_config)
-            a.add_behavior(QRoutingAgent(agent_behavior.get("QRoutingAgent")))
+        def func(position):
+            a = Agent(position=position, config=config)
+            behavior_name = behavior_type.__name__
+            a.add_behavior(behavior_type(behavior_conf.get(behavior_name)))
             return a
 
         return func

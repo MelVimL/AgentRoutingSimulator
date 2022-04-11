@@ -6,6 +6,7 @@ from behavior.connections import SimpleWireless
 from utils.spatial import Position
 from simulation import SimpleSimulation
 from utils.config import ConfigLoader
+from factories import ConnectionFactory, AgentFactory
 
 CONFIG_PATH_1 = "AgentRoutingSimulator/tests/data/test_sim_1.yaml"
 
@@ -42,21 +43,13 @@ def test_simple_config(config: dict, net: Network):
     assert all(params_set) and net.config.get("net_test_param")
 
 
-def test_simple_q_simulation(config, net: Network):
-
-    sim = SimpleSimulation(config=config.get("Simulation"))
-    sim.set_network(net)
-    a_behavior_conf = config.get("Agent").get("Behavior").get("QRoutingAgent")
-    connection_behavior_config = config.get(
-        "Connection").get("Behavior").get("SimpleWireless")
-
-    for agent in sim.get_agents():
-        agent.add_behavior(QRoutingAgent(config=a_behavior_conf))
-
-    for connection in sim.get_connections():
-        connection.add_behavior(SimpleWireless(
-            config=connection_behavior_config))
-
+def test_simple_q_simulation(config, sim):
+    net = sim.get_network()
+    a_conf = config.get("Agent")
+    c_conf = config.get("Connection")
+    a_func = AgentFactory.create_mono_behavior(QRoutingAgent, a_conf)
+    c_func = ConnectionFactory.create_mono_behavior(SimpleWireless, c_conf)
+    net.generate_graph(net.graph, a_func, c_func)
     for i in range(20):
         sim.update()
 

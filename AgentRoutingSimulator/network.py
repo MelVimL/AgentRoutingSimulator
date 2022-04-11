@@ -1,9 +1,9 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Type
+from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from core.entities import Connection, Agent
 from utils.spatial import Position
-
+from functools import cache
 import networkx as nx
 from utils.datastructures import SpaceStorage, KDTree
 
@@ -24,6 +24,12 @@ class Network():
 
     def get_agents(self) -> list[Agent]:
         return list(self.graph)
+
+    @cache
+    def get_agent_by_name(self, name):
+        for agent in self.get_agents():
+            if str(agent) == name:
+                return agent
 
     def connect(self,
                 agent_a: Agent,
@@ -51,10 +57,13 @@ class Network():
         graph = self.graph
 
         for other_agent in graph.neighbors(agent):
-            connection = graph.get_edge_data(agent, other_agent)["connection"]
+            connection = self.get_connection(agent, other_agent)
             result.append(connection)
 
         return result
+
+    def get_connection(self, a: Agent, b: Agent) -> Connection:
+        return self.graph.get_edge_data(a, b)["connection"]
 
     def get_graph(self) -> nx.Graph:
         return self.graph
@@ -72,7 +81,7 @@ class Network():
         for node in graph_scheme.nodes:
             x, y = positions.get(node)
             id_agent_map.update({node: a_gen_func(Position(x, y))})
-        
+
         for edge in graph_scheme.edges:
             a_key, b_key = edge
             a = id_agent_map.get(a_key)
