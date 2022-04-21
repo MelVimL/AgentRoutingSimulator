@@ -1,8 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name='AgentRoutingSimulator',
-    package_dir={"": "AgentRoutingSimulator"},
-    packages=find_packages("."),
+    packages=find_packages(),
     version='0.2',
     license='GLP3',
     description='TYPE YOUR DESCRIPTION HERE',
