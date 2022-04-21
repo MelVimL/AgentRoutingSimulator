@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
-    name='AgentRoutingSimulator',
-    packages=find_packages(),
+    name='ars',
+    packages=find_packages(include=["ars"]),
     version='0.2',
     license='GLP3',
     description='TYPE YOUR DESCRIPTION HERE',
