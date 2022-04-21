@@ -1,7 +1,8 @@
-from setuptools import setup, find_packages
+from distutils.core import setup
+
 setup(
     name='ars',
-    packages=find_packages(include=["ars"]),
+    packages=["ars", "ars.behavior", "ars.core", "ars.db", "ars.utils"],
     version='0.2',
     license='GLP3',
     description='TYPE YOUR DESCRIPTION HERE',
