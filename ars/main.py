@@ -1,9 +1,9 @@
 from __future__ import annotations
-from tests.qrouting_test import send_messages
-from tests.conftest import medium_sim_load
-from utils.config import ConfigLoader
+from ..tests.qrouting_test import send_messages
+from ..tests.conftest import medium_sim_load
+from .utils.config import ConfigLoader
 from json import dump
-from factories import StatsFactory
+from .factories import StatsFactory
 
 PATH_DUMP = "/data/q_routing"
 

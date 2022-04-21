@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from core.behaving import Behaving
+from ..core.behaving import Behaving
 
 
 class Behavior:

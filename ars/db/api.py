@@ -1,5 +1,5 @@
 from datetime import datetime as dt
-from db.schema import Base, StatType, Stat, Simulation
+from .schema import Base, StatType, Stat, Simulation
 from sqlalchemy import create_engine, select, update
 from sqlalchemy.orm import Session
 

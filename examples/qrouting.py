@@ -1,9 +1,9 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from factories import StatsFactory
+from .ars.factories import StatsFactory
 from uuid import uuid1
 if TYPE_CHECKING:
-    from core.entities import Agent
+    from ars.core.entities import Agent
 from dataclasses import dataclass, asdict
 from behavior.agents import AgentBehavior
 import networkx as nx

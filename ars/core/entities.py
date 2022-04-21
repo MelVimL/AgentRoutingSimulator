@@ -1,9 +1,9 @@
 from __future__ import annotations
-from core.behaving import Behaving
-from utils.common import Indentifiable
-from utils.spatial import Position, Positions
+from ..core.behaving import Behaving
+from ..utils.common import Indentifiable
+from ..utils.spatial import Position, Positions
 from dataclasses import dataclass
-from network import Network
+from ..network import Network
 import json
 
 

@@ -1,10 +1,10 @@
-from core.entities import EntityScheduler
-from core.entities import Agent, Connection
-from utils.common import Indentifiable
-from network import Network
-from factories import StatsFactory
-from db.api import init_session as init_db
-from db.api import SimulationAPI as db
+from .core.entities import EntityScheduler
+from .core.entities import Agent, Connection
+from .utils.common import Indentifiable
+from .network import Network
+from .factories import StatsFactory
+from .db.api import init_session as init_db
+from .db.api import SimulationAPI as db
 
 
 class SimpleSimulation(Indentifiable):

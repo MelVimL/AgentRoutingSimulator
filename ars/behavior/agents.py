@@ -1,5 +1,5 @@
-from core.behavior import Behavior
-from core.entities import Agent
+from ..core.behavior import Behavior
+from ..core.entities import Agent
 from queue import Queue
 
 

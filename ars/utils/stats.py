@@ -1,6 +1,6 @@
 from __future__ import annotations
-from db.api import SimulationAPI as sim_db
-from db.api import StatsAPI as db
+from ..db.api import SimulationAPI as sim_db
+from ..db.api import StatsAPI as db
 
 
 class Stats:

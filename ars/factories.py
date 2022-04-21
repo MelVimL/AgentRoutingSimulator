@@ -1,8 +1,8 @@
 from __future__ import annotations
-from utils.stats import Stats
-from core.entities import Agent, Connection
-from network import Network
-from utils.spatial import Position
+from .utils.stats import Stats
+from .core.entities import Agent, Connection
+from .network import Network
+from .utils.spatial import Position
 
 from behavior.connections import SimpleWireless
 

@@ -1,11 +1,11 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from core.entities import Connection, Agent
-from utils.spatial import Position
+    from .core.entities import Connection, Agent
+from .utils.spatial import Position
 from functools import cache
 import networkx as nx
-from utils.datastructures import SpaceStorage, KDTree
+from .utils.datastructures import SpaceStorage, KDTree
 
 
 class Network():

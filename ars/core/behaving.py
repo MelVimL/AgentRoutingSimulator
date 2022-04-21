@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from core.behavior import Behavior
+    from ..core.behavior import Behavior
 
 from dataclasses import dataclass
 

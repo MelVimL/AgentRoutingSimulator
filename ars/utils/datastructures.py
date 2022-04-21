@@ -1,11 +1,11 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from core.entities import Agent
+    from ..core.entities import Agent
 
 import numpy as np
 from scipy.spatial import cKDTree
-from utils.spatial import Position
+from ..utils.spatial import Position
 
 
 class SpaceStorage:

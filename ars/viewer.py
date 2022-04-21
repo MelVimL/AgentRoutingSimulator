@@ -1,6 +1,6 @@
-from db.api import init_session
-from db.api import SimulationAPI
-from db.api import StatsAPI
+from .db.api import init_session
+from .db.api import SimulationAPI
+from .db.api import StatsAPI
 
 
 def search_for_stat_types(sim):
