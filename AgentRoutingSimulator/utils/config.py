@@ -11,7 +11,6 @@ class ConfigLoader:
 
     @staticmethod
     def load():
-        if not ConfigLoader._config:
-            with open(ConfigLoader._path, "r") as f:   
-                ConfigLoader._config = yaml.safe_load(f)
+        with open(ConfigLoader._path, "r") as f:
+            ConfigLoader._config = yaml.safe_load(f)
         return ConfigLoader._config

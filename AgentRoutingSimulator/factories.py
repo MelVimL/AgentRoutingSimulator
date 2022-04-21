@@ -12,18 +12,19 @@ class StatsFactory:
 
     @staticmethod
     def create(simulation_id=None) -> Stats:
-        if simulation_id is None and StatsFactory._stats is not None:
-            pass
-        elif simulation_id and not StatsFactory._stats:
+        if simulation_id and not StatsFactory._stats:
             StatsFactory._stats = Stats(simulation_id)
         elif simulation_id and StatsFactory._stats:
             if StatsFactory._stats._simulation_id != simulation_id:
                 id = StatsFactory._stats._simulation_id
                 raise ValueError(f"Stats is initlized with {id}.")
         elif not simulation_id and not StatsFactory._stats:
-            raise ValueError(
-                "Stats not initlized. Please provide the Simulation_id.")
+            raise ValueError("Stats not initlized. Please provide the Simulation_id.")
         return StatsFactory._stats
+
+    @staticmethod
+    def reset():
+        StatsFactory._stats = None
 
 
 class ConnectionFactory:

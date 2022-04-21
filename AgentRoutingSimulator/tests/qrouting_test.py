@@ -7,6 +7,7 @@ from network import Network
 from simulation import SimpleSimulation
 from factories import StatsFactory
 import matplotlib.pyplot as plt
+import json
 
 
 @pytest.fixture
@@ -85,13 +86,14 @@ def test_big_send(big_sim):
     for i in range(2000):
         big_sim.update()
 
+    plot(big_sim)
+
 
 def test_small_send(small_sim: SimpleSimulation):
     agents = small_sim.get_agents()
     small_sim.get_network().debug_plt()
     r.seed(20)
-    
-    for i in range(20000):
+    for i in range(2000):
         source = r.choice(agents)
         destination = r.choice(agents)
 
@@ -101,21 +103,71 @@ def test_small_send(small_sim: SimpleSimulation):
         print(source)
         sender.messages.append(message)
         small_sim.update()
-        plot()
+    plot(small_sim)
 
 
-def plot():
+def get_data(sim):
     stats = StatsFactory.create()
     arival_times = [x for x in stats.get("message_arrival_time").values()]
     result = {}
+
+    to = sim.get_time_step()
+    xs = [x for x in range(to)]
     for x, y in arival_times:
         result.setdefault(x, []).append(y)
+    ys = []
+    ys_temp = []
+    for x in xs:
+        for y in result.get(x, []):
+            ys_temp.append(y)
+        if ys_temp:
+            ys.append(sum(ys_temp)/len(ys_temp))
+        else:
+            ys.append(None)
+    return ys
 
-    xs = [x for x in result]
-    ys = [sum(result[y])/len(result[y]) for y in xs]
+
+def dump(sim, filename):
+    data = get_data(sim)
+    data = {"label": sim.get_agents()[0].get_behavior(QRoutingAgent).DELTA,
+            "y": data}
+    with open(filename, "w+") as f:
+        json.dump(data, f)
+
+
+def load(filename):
+    with open(filename, "r") as f:
+        return json.load(f)
+
+
+def plot(*sims):
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
-    ax.plot(xs, ys)
+    ax.set_xlabel('epoch [steps]')
+    ax.set_ylabel('avg message time')
+
+    for s in sims:
+        print(sims)
+        print(s)
+        label = s.get_agents()[0].get_behavior(QRoutingAgent).DELTA
+        ys = get_data(s)
+        ax.plot(ys, label=label)
+    ax.legend()
+    plt.show()
+
+
+def plot_data(*filenames):
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    ax.set_xlabel('epoch [steps]')
+    ax.set_ylabel('avg message time')
+
+    for filename in filenames:
+        data = load(filename)
+        label = data.get("label")
+        y = data.get("y")
+        ax.plot(y, label=label)
+    ax.legend()
     plt.show()
 
 
@@ -131,8 +183,7 @@ def test_send_a_couple_of_messages(big_sim: SimpleSimulation):
             destination = r.choice(agents)
 
             sender: QRoutingAgent = source.get_behavior(QRoutingAgent)
-            message = sender.generate_message(
-                destination=destination, size=200)
+            message = sender.generate_message(destination=destination, size=200)
             messages.append(message)
 
         for message in messages:
@@ -140,29 +191,39 @@ def test_send_a_couple_of_messages(big_sim: SimpleSimulation):
 
         big_sim.update()
 
-    stats = StatsFactory.create()
-
-    arival_times = [x for x in stats.get("message_arrival_time").values()]
-    result = {}
-    for x, y in arival_times:
-        result.setdefault(x, []).append(y)
-    xs = [x for x in result]
-    ys = [sum(result[y])/len(result[y]) for y in xs]
-    fig = plt.figure()
-    ax = fig.add_subplot(1, 1, 1)
-    ax.plot(xs, ys)
-    plt.show()
+    plot(big_sim)
 
 
-def test_medium_graph(medium_sim):
+def test_medium_sim(medium_sim):
     agents = medium_sim.get_agents()
     medium_sim.get_network().debug_plt()
     r.seed(20)
-    for i in range(20000):
-        send_messages(100, agents)
-        for i in range(4000):
+
+    for i in range(100):
+        send_messages(500, agents)
+        for i in range(1000):
             medium_sim.update()
-        plot()
+    dump(medium_sim, "AgentRoutingSimulator/tests/data/test_sim_data_3.json")
+
+
+def test_plot():
+    filenames = []
+    for i in range(1, 4):
+        filenames.append(f"AgentRoutingSimulator/tests/data/test_sim_data_{i}.json")
+    plot_data(*filenames)
+
+
+def test_tripple_medium_graph(tripple_sim):
+
+    for sim in tripple_sim:
+        agents = sim.get_agents()
+        sim.get_network().debug_plt()
+        r.seed(20)
+        for i in range(1):
+            send_messages(500, agents)
+            for i in range(1000):
+                sim.update() 
+    plot(*tripple_sim)
 
 
 def send_messages(number, agents):

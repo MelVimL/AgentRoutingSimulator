@@ -9,10 +9,12 @@ from simulation import SimpleSimulation
 from factories import AgentFactory, ConnectionFactory
 
 CONFIG_PATH_1 = "AgentRoutingSimulator/tests/data/test_sim_1.yaml"
+CONFIG_PATH_2 = "AgentRoutingSimulator/tests/data/test_sim_2.yaml"
+CONFIG_PATH_3 = "AgentRoutingSimulator/tests/data/test_sim_3.yaml"
 
 
-def config_load():
-    ConfigLoader.set_path(CONFIG_PATH_1)
+def config_load(path=CONFIG_PATH_3):
+    ConfigLoader.set_path(path)
     return ConfigLoader.load()
 
 

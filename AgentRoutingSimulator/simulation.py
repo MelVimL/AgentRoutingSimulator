@@ -19,6 +19,7 @@ class SimpleSimulation(Indentifiable):
         self.simulation_key = db.create_simulation(str(self), config)
         self.stats = StatsFactory.create(self.simulation_key)
         self.entity_scheduler = EntityScheduler()
+        self.config = config
 
     def update(self):
         self.entity_scheduler.update(self.get_time_step())

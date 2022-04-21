@@ -7,6 +7,7 @@ if TYPE_CHECKING:
 from dataclasses import dataclass, asdict
 from behavior.agents import AgentBehavior
 import networkx as nx
+import random as r
 
 
 @dataclass
@@ -105,8 +106,7 @@ class QRoutingAgent(AgentBehavior):
 
     def send_message(self, message: QMessage):
         destination = message.destination
-        neigbors = self.get_neighbors()
-        next_hop = self.select_best_choice(neigbors, destination)
+        next_hop = self.select_best_choice(destination).get_agent()
 
         q = len(self.messages)
         t = self.neigbor_estimation_request(destination, next_hop)
@@ -138,98 +138,55 @@ class QRoutingAgent(AgentBehavior):
         return destination_table.setdefault(next_hop, self.DEFAULT_Q)
 
     def neigbor_estimation_request(self, destination: str, next_hop: Agent):
-        behavior = next_hop.get_behavior(QRoutingAgent)
-        behavior.dijkstra_estimation(destination)
-        return behavior.dijkstra_estimation(destination)
+        #behavior = next_hop.get_behavior(QRoutingAgent)
+        # behavior.dijkstra_estimation(destination)
+        return self.T(destination)
 
-    def neigbor_estimation(self,
-                           destination: str,
-                           paths_found: list[float],
-                           already_visited: list[str] = [],
-                           n: int = 100) -> float:
-        params = {"destination": destination,
-                  "paths_found": paths_found,
-                  "already_visited": list(already_visited),
-                  "n": n-1}
-        this_agent = self.get_agent()
-        params.get("already_visited").append(this_agent)
-        if n <= 0:
-            next_hop = self.select_best_choice(
-                self.get_neighbors(), destination)
-            return self.quality_func(destination, next_hop)
-        if str(this_agent) == destination:
-            return 0.
-        agents = self.without(self.get_neighbors(), already_visited)
-        q_values = []
-        for agent in agents:
-            try:
-                q = self.quality_func(destination, agent)
-                t = 0.5 * \
-                    agent.get_behavior(
-                        QRoutingAgent).neigbor_estimation(**params)
-                q_values.append(q+t)
+    def get_flag():
+        pass
 
-            except Exception:
-                pass
-        if q_values:
-            return min(q_values)
-        else:
-            return None
-
-    def set_mark(self, n):
-        self.mark = n
-
-    def get_mark(self):
-        try:
-            mark = self.mark
-        except Exception:
-            self.mark = 0
-            mark = 0
-        return mark
-
-    def clean_mark(self):
-        for agent in self.get_network().get_agents():
-            try:
-                del agent.mark
-            except AttributeError:
-                pass
+    def set_flag():
+        pass
 
     def dijkstra_estimation(self, destination):
         def weight_func(u, v, d):
             u_behavior = u.get_behavior(QRoutingAgent)
             v_behavior = v.get_behavior(QRoutingAgent)
-            last_mark = u_behavior.get_mark()
 
-            new_mark = last_mark + 1
+            if u_behavior.get_mark() is None:
+                u_behavior.set_mark(1)
+            new_mark = u_behavior.get_mark() + 1
             v_behavior.set_mark(new_mark)
+
             weight = u_behavior.quality_func(destination, v)
-            for i in range(last_mark):
-                weight *= 1.0
-            return weight
+
+            return weight * pow(self.DELTA, u_behavior.get_mark())
+
         destination = self.get_network().get_agent_by_name(destination)
-        path = nx.shortest_path(self.get_network().get_graph(
-        ), source=self.get_agent(), target=destination, weight=weight_func, method='dijkstra')
+        graph = self.get_network().get_graph()
+        path = nx.shortest_path(graph, self.get_agent(),
+                                destination, weight_func, 'dijkstra')
         result = 0.0
-        for u, v in zip(path, path[1:]):
-            result += weight_func(u, v, None)
-        self.clean_mark()
+        elements = [x for x in enumerate(zip(path, path[1:]))]
+        for i, (u, v) in reversed(elements):
+            u_behavior = u.get_behavior(QRoutingAgent)
+            result += u_behavior.quality_func(destination, v)
+            if i != 0:
+                result *= self.DELTA
+
         return result
 
-    def tail_estimation(self, destination: str, paths_found: list[float], current_path: float = 0, already_visited: list[str] = [], n: int = 0) -> float:
-        agent = self.get_agent()
-        neighbors = self.without(self.get_neighbors(), already_visited)
-        if destination == str(agent):
-            paths_found.append(current_path)
+    def T(self, destination, i=10):
+        delta = self.DELTA
+        next_hop = self.select_best_choice(destination)
+        Q = self.quality_func(destination, next_hop.get_agent())
+        if str(self.get_agent()) == destination:
+            return 0.0
+        if i < 0:
+            return Q
 
-        for neighbor in neighbors:
-            q = self.quality_func(destination, neighbor)
-            path = current_path + q
-            if paths_found:
-                if path >= min(paths_found):
-                    continue
-            neighbor = neighbor.get_behavior(QRoutingAgent)
-            neighbor.tail_estimation(
-                destination, paths_found, path, already_visited+[agent], n+1)
+        T = next_hop.T(destination, i-1)
+        return (1 - delta) * Q + delta * T
 
     def without(self, elements, excludes):
         result = []
@@ -249,11 +206,16 @@ class QRoutingAgent(AgentBehavior):
                         trasmission_time=0.,
                         _fake_payload=size)
 
-    def select_min(self, neigbors, destination):
-        return min(neigbors, key=lambda x: self.quality_func(destination, x))
+    def select_min(self, destination):
+        ns = [n.get_behavior(QRoutingAgent) for n in self.get_neighbors()]
+        return min(ns, key=lambda x: self.quality_func(destination, x))
 
-    def select_best_choice(self, neigbors, destination):
-        return self.select_min(neigbors, destination)
+    def select_best_choice(self, destination):
+        return self.select_min(destination)
+
+    def best_choice_quality(self, destination):
+        next_hop = self.select_best_choice.get_agent()
+        return self.quality_func(destination, next_hop)
 
     def get_neighbors(self):
         return self.get_network().get_neighbors(self.get_agent())
