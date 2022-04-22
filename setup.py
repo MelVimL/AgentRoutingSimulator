@@ -16,7 +16,8 @@ setup(
         'pytest',
         'numpy',
         'pyyaml',
-        'scipy'
+        'scipy',
+        'sqlalchemy'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

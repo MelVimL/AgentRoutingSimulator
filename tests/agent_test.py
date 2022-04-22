@@ -1,7 +1,7 @@
 from tests.utils import PingBehavior, PongBehavior
-from core.entities import Agent
-from behavior.agents import SimpleAgentUpdate
-from utils.spatial import Position, Positions
+from ..ars.core.entities import Agent
+from ..ars.behavior.agents import SimpleAgentUpdate
+from ..ars.utils.spatial import Position, Positions
 
 
 ZERO = Positions.ZERO
