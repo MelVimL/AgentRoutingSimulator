@@ -15,7 +15,8 @@ setup(
         'networkx',
         'pytest',
         'numpy',
-        'pyyaml'
+        'pyyaml',
+        'scipy'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

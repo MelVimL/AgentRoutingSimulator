@@ -1,7 +1,8 @@
 Simulation:
   name: "TestSim1"
   epoch_delta: 2
-  epoch_max: 
+  epoch_max: -1 
+  epoch_auto_stop: 
 Agent:
   test_param: True
   Behavior:
@@ -15,7 +16,6 @@ Connection:
   Behavior:
     SimpleWireless:
       Test: 123
-    
 Network:
   net_test_param: True
   
