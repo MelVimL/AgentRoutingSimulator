@@ -4,7 +4,7 @@ from .core.entities import Agent, Connection
 from .network import Network
 from .utils.spatial import Position
 
-from behavior.connections import SimpleWireless
+from .behavior.connections import SimpleWireless
 
 
 class StatsFactory:
