@@ -1,4 +1,4 @@
-from core.behavior import Behavior
+from ..core.behavior import Behavior
 
 
 class LinearDecay(Behavior):

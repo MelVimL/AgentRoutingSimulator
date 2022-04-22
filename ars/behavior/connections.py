@@ -1,6 +1,6 @@
-from core.entities import Connection
-from core.behavior import Behavior
-from utils.spatial import distance_of_agents
+from ..core.entities import Connection
+from ..core.behavior import Behavior
+from ..utils.spatial import distance_of_agents
 from math import pi, pow
 from itertools import permutations
 
