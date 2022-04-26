@@ -1,7 +1,7 @@
 import json
 
-from core.entities import Agent, Connection
-from behavior.connections import Wireless
+from ars.core.entities import Agent, Connection
+from ars.behavior.connections import Wireless
 
 
 def test_simple_connection_behavior():

@@ -1,6 +1,6 @@
 
-from db.schema import Simulation, Stat, StatType
-from db.api import get_session, StatsAPI
+from ars.db.schema import Simulation, Stat, StatType
+from ars.db.api import get_session
 
 
 test_connection = "sqlite://"
@@ -32,5 +32,5 @@ def test_relationship_stat_type():
 
 
 def test_get_stats():
-    #StatsAPI
+    
     pass

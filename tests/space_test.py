@@ -1,8 +1,8 @@
 from itertools import product
-from core.entities import Agent
+from ars.core.entities import Agent
 
-from utils.spatial import Position
-from utils.datastructures import Bucket, KDTree
+from ars.utils.spatial import Position
+from ars.utils.datastructures import Bucket, KDTree
 
 
 def test_distance_with_bucket_store():

@@ -1,6 +1,6 @@
 import pytest
-from simulation import SimpleSimulation
-from factories import StatsFactory
+from ars.simulation import SimpleSimulation
+from ars.factories import StatsFactory
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
-from core.entities import Agent, Connection
-from utils.spatial import Positions, Position
-from network import Network
+from ars.core.entities import Agent, Connection
+from ars.utils.spatial import Positions, Position
+from ars.network import Network
 from itertools import permutations
 import networkx.generators.classic as nxg_classics
 

@@ -1,10 +1,10 @@
-from core.entities import Connection, Agent
+from ars.core.entities import Connection, Agent
 from tests.utils import EmptyEnity
-from utils.spatial import Positions
-from behavior.entities import LinearDecay, ExponetialDecay
-from behavior.connections import SimpleWireless
-from behavior.agents import SimpleReceiver, SimpleSender
-from network import Network
+from ars.utils.spatial import Positions
+from ars.behavior.entities import LinearDecay, ExponetialDecay
+from ars.behavior.connections import SimpleWireless
+from ars.behavior.agents import SimpleReceiver, SimpleSender
+from ars.network import Network
 
 
 def test_linear_decay():

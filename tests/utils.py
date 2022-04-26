@@ -1,6 +1,6 @@
-from core.entities import Agent
-from core.behaving import Behaving
-from core.behavior import Behavior
+from ars.core.entities import Agent
+from ars.core.behaving import Behaving
+from ars.core.behavior import Behavior
 
 
 class PingBehavior(Behavior):

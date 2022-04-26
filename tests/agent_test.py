@@ -1,17 +1,19 @@
 from tests.utils import PingBehavior, PongBehavior
-from ..ars.core.entities import Agent
-from ..ars.behavior.agents import SimpleAgentUpdate
-from ..ars.utils.spatial import Position, Positions
+from ars.core.entities import Agent
+from ars.behavior.agents import SimpleAgentUpdate
+from ars.utils.spatial import Positions
 
 
 ZERO = Positions.ZERO
 DIAGONAL = Positions.DIAGONAL
 UP = Positions.UP
 
+
 def test_agent_id():
     a = Agent()
-    
+
     assert a.get_id()
+
 
 def test_spatial_function():
     a = Agent(ZERO).get_position()
@@ -19,14 +21,15 @@ def test_spatial_function():
 
     assert a.distance(b) == 1.0 and a.distance(b) == b.distance(a)
 
+
 def test_sending_agent():
     ether = {}
     ping = PingBehavior(ether)
     pong = PongBehavior(ether)
-    
+
     a = Agent(Positions.ZERO)
     b = Agent(Positions.DIAGONAL)
-    
+
     a.add_behavior(ping)
     b.add_behavior(pong)
 
@@ -35,19 +38,16 @@ def test_sending_agent():
 
     assert ether["mail"]
 
+
 def testSimpleBehavior():
     a = Agent()
-    def test_behavior(agent:Agent, time_step:int):
+
+    def test_behavior(agent: Agent, time_step: int):
         env = agent.get_environment()
         env["Test"] = time_step
-       
 
-    a.add_behavior(SimpleAgentUpdate(test_behavior)) 
-
+    a.add_behavior(SimpleAgentUpdate(test_behavior))
     for i in range(10):
         a.update(i)
-    
+
     assert a.get_environment()["Test"] == 9
-
-
-

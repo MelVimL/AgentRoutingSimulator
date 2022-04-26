@@ -1,13 +1,12 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from ..ars.factories import StatsFactory
+from ars.factories import StatsFactory
 from uuid import uuid1
 if TYPE_CHECKING:
     from ars.core.entities import Agent
 from dataclasses import dataclass, asdict
-from ..ars.behavior.agents import AgentBehavior
+from ars.behavior.agents import AgentBehavior
 import networkx as nx
-
 
 
 @dataclass
@@ -138,8 +137,6 @@ class QRoutingAgent(AgentBehavior):
         return destination_table.setdefault(next_hop, self.DEFAULT_Q)
 
     def neigbor_estimation_request(self, destination: str, next_hop: Agent):
-        #behavior = next_hop.get_behavior(QRoutingAgent)
-        # behavior.dijkstra_estimation(destination)
         return self.T(destination)
 
     def get_flag():

@@ -1,6 +1,6 @@
 import pytest
-from core.entities import Entity
-from core.behavior import Behavior
+from ars.core.entities import Entity
+from ars.core.behavior import Behavior
 
 
 class BehaviorBase(Behavior):

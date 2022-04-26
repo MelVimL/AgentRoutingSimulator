@@ -1,11 +1,11 @@
 import pytest
 import random as r
-from core.entities import Agent, Connection
+from ars.core.entities import Agent, Connection
 from examples.qrouting import QRoutingAgent, QMessage
-from utils.spatial import Position
-from network import Network
-from simulation import SimpleSimulation
-from factories import StatsFactory
+from ars.utils.spatial import Position
+from ars.network import Network
+from ars.simulation import SimpleSimulation
+from ars.factories import StatsFactory
 import matplotlib.pyplot as plt
 import json
 
