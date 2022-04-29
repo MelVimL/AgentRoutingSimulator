@@ -10,7 +10,19 @@ class ConfigLoader:
         ConfigLoader._path = path
 
     @staticmethod
+    def get_path():
+        return ConfigLoader._path
+        
+    @staticmethod
     def load():
         with open(ConfigLoader._path, "r") as f:
             ConfigLoader._config = yaml.safe_load(f)
         return ConfigLoader._config
+    
+    @staticmethod
+    def get():
+        return ConfigLoader._config
+
+    @staticmethod
+    def set(config):
+        ConfigLoader._config = config
