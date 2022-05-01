@@ -23,18 +23,18 @@ class EntityScheduler:
             for entity in self._entities.get(priority):
                 entity.update(tpf)
 
-    def add(self, entity: Entity, priority: int = 0):
+    def add(self, entity: Entity, priority: int = 0) -> None:
         """
         """
         self._entities.setdefault(priority, []).append(entity)
 
-    def add_all(self, entities: list[Entity], priority: int = 0):
+    def add_all(self, entities: list[Entity], priority: int = 0) -> None:
         """
         """
         for entity in entities:
             self.add(entity=entity, priority=priority)
 
-    def get_all(self):
+    def get_all(self) -> list[Entity]:
         result = []
 
         for priority in sorted(self._entities.keys()):
@@ -43,7 +43,7 @@ class EntityScheduler:
 
         return result
 
-    def remove(self, entity: Entity):
+    def remove(self, entity: Entity) -> None:
         """
         """
         for priority in sorted(self._entities.keys()):
