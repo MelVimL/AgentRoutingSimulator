@@ -18,7 +18,7 @@ setup(
         'pyyaml',
         'scipy',
         'sqlalchemy',
-        'psycopg2'
+        'psycopg2-binary'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
