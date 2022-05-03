@@ -93,7 +93,7 @@ class StatsAPI:
     def get_stat_types():
         with get_session() as session, session.begin():
             statement = select(StatType)
-            return session.execute(statement).all()
+            return [(x[0].id, x[0].name) for x in session.execute(statement).all()]
 
     @staticmethod
     def add_stat(simulation_id: int, stat_type_id: int, time_step: int, value):
@@ -106,7 +106,7 @@ class StatsAPI:
     def get_stats(simulation_id: int, stat_type_id: int,):
         with get_session() as session, session.begin():
             statement = select(Stat)\
-                .where(Simulation.id == simulation_id)\
-                .where(StatType.id == stat_type_id)\
+                .where(Stat.simulation_id == simulation_id)\
+                .where(Stat.stat_type_id == stat_type_id)\
                 .order_by(Stat.step)
-            return [(x.step, x.value) for x in session.execute(statement).scalars().all()]
+            return [(x[0].step, x[0].value) for x in session.execute(statement).all()]
