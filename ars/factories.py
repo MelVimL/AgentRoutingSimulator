@@ -14,10 +14,9 @@ class StatsFactory:
     def create(simulation_id=None) -> Stats:
         if simulation_id:
             StatsFactory._stats = Stats(simulation_id)
-        elif not simulation_id:
-            if not StatsFactory._stats:
-                raise ValueError(
-                    "Stats not initlized. Please provide the Simulation_id.")
+        elif StatsFactory._stats == None:
+            raise ValueError("Stats not initlized. Please provide the Simulation_id.")
+        
         return StatsFactory._stats
 
     @staticmethod
