@@ -15,7 +15,7 @@ class StatsFactory:
         if simulation_id:
             StatsFactory._stats = Stats(simulation_id)
         elif not simulation_id:
-            if StatsFactory._stats:
+            if not StatsFactory._stats:
                 raise ValueError(
                     "Stats not initlized. Please provide the Simulation_id.")
         return StatsFactory._stats
