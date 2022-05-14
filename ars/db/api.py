@@ -15,7 +15,7 @@ def one_or_none(result):
 
 def init_session(connection_string=DEFAULT_DB):
     global _engine
-    _engine = create_engine(connection_string, encoding="UTF-8", echo=True)
+    _engine = create_engine(connection_string, encoding="UTF-8", echo=False)
     Base.metadata.create_all(_engine)
 
 
