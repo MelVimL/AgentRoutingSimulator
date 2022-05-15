@@ -14,6 +14,7 @@ class Simulation(Base):
     start_datetime = Column(DateTime)
     end_datetime = Column(DateTime)
     current_time_step = Column(Integer)
+    current_message_count = Column(Integer)
     config = Column(JSON)
 
     stats = relationship("Stat", back_populates="simulation")

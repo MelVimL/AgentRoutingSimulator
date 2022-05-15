@@ -59,6 +59,22 @@ class SimulationAPI():
                     .values(current_time_step=time_step)
                 session.execute(statement)
 
+    @staticmethod
+    def get_message_count(simulation_id: int) -> int:
+        with get_session() as session, session.begin():
+            statement = select(Simulation).where(
+                Simulation.id == simulation_id)
+            return session.execute(statement).first()[0].current_message_count
+
+    @staticmethod
+    def set_message_count(simulation_id: int, message_count) -> None:
+        with get_session() as session:
+            with session.begin():
+                statement = update(Simulation)\
+                    .where(Simulation.id == simulation_id)\
+                    .values(current_message_count=message_count)
+                session.execute(statement)
+
 
 class StatsAPI:
 
