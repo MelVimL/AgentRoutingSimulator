@@ -29,7 +29,8 @@ class SimulationAPI():
     @staticmethod
     def create_simulation(name, config) -> int:
         simulation = Simulation(name=name, config=config,
-                                start_datetime=dt.now(), current_time_step=0)
+                                start_datetime=dt.now(), current_time_step=0,
+                                current_message_count=0)
 
         with get_session() as session, session.begin():
             session.add(simulation)
