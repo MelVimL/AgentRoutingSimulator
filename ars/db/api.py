@@ -78,6 +78,7 @@ class SimulationAPI():
 
 
 class StatsAPI:
+    stats_to_send = []
 
     @staticmethod
     def create_stat_type(name):
@@ -116,8 +117,12 @@ class StatsAPI:
     def add_stat(simulation_id: int, stat_type_id: int, time_step: int, value):
         stat = Stat(simulation_id=simulation_id,
                     stat_type_id=stat_type_id, step=time_step, value=value)
-        with get_session() as session, session.begin():
-            session.add(stat)
+        StatsAPI.stats_to_send.append(stat)
+        if len(StatsAPI.stats_to_send) > 10000:
+            with get_session() as session, session.begin():
+                session.bulk_save_objects(StatsAPI.stats_to_send)
+        
+            StatsAPI.stats_to_send = []
 
     @staticmethod
     def get_stats(simulation_id: int, stat_type_id: int,):
