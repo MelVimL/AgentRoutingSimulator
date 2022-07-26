@@ -118,7 +118,7 @@ class StatsAPI:
         stat = Stat(simulation_id=simulation_id,
                     stat_type_id=stat_type_id, step=time_step, value=value)
         StatsAPI.stats_to_send.append(stat)
-        if len(StatsAPI.stats_to_send) > 10000:
+        if len(StatsAPI.stats_to_send) > 20000:
             StatsAPI.flush_stats()
     
     @staticmethod
