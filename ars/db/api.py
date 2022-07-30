@@ -136,7 +136,7 @@ class StatsAPI:
                 .order_by(Stat.step)
             return [(x[0].step, x[0].value) for x in session.execute(statement).all()]
     @staticmethod
-    def get_stats_until(simulation_id: int, stat_type_id: int, until_time_step: 100000):
+    def get_stats_until(simulation_id: int, stat_type_id: int, until_time_step = 100000):
         with get_session() as session, session.begin():
             statement = select(Stat)\
                 .where(Stat.simulation_id == simulation_id)\
