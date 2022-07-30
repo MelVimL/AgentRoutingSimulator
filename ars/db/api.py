@@ -141,6 +141,6 @@ class StatsAPI:
             statement = select(Stat)\
                 .where(Stat.simulation_id == simulation_id)\
                 .where(Stat.stat_type_id == stat_type_id)\
-                .where(Stat.step>=until_time_step)\
+                .where(Stat.step<=until_time_step)\
                 .order_by(Stat.step)
             return [(x[0].step, x[0].value) for x in session.execute(statement).all()]
