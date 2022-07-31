@@ -93,7 +93,7 @@ class Network():
         return self.space
 
     def get_neighbors(self, agent) -> list:
-        return [x for x in self.graph.neighbors(agent)]
+        return list(self.graph.neighbors(agent))
 
     def debug_plt(self) -> None:
         import networkx as nx

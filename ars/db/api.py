@@ -68,7 +68,7 @@ class SimulationAPI():
             return 
 
     @staticmethod
-    def decrement_message_count(simulation_id: int, cnt: int) -> None:
+    def set_message_count(simulation_id: int, cnt: int) -> None:
         with get_session() as session:
             with session.begin():
                 statement = update(Simulation)\
