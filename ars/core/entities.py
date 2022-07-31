@@ -6,6 +6,10 @@ from dataclasses import dataclass
 from ..network import Network
 import json
 
+import logging
+
+log = logging.getLogger("__main__")
+
 
 class EntityScheduler:
     """
@@ -138,6 +142,7 @@ class Connection(Entity, NetworkAccess):
             return json_nois + data.get(fake_type, -json_nois)
 
         def transmit(self, bytes):
+
             if bytes >= self.to_send:
                 bytes_left = bytes - self.to_send
                 self.to_send = 0
@@ -187,9 +192,10 @@ class Connection(Entity, NetworkAccess):
     def transfer_bytes(self, source, target, bytes: bytes):
         in_list = self._get_messages(source, Connection.IN)
         out_list = self._get_messages(target, Connection.OUT)
-
+        
         while bytes != 0 and in_list:
             msg = in_list.pop()
+            log.info(f"Message: {msg}")
             bytes = msg.transmit(bytes)
             if msg.is_transmitted():
                 out_list.insert(0, msg)
