@@ -65,15 +65,39 @@ class SimulationAPI():
         with get_session() as session, session.begin():
             statement = select(Simulation).where(
                 Simulation.id == simulation_id)
-            return session.execute(statement).first()[0].current_message_count
+            return 
 
     @staticmethod
-    def set_message_count(simulation_id: int, message_count) -> None:
+    def decrement_message_count(simulation_id: int, cnt: int) -> None:
         with get_session() as session:
             with session.begin():
                 statement = update(Simulation)\
                     .where(Simulation.id == simulation_id)\
-                    .values(current_message_count=message_count)
+                    .values(current_message_count=cnt)
+                session.execute(statement)
+
+    @staticmethod
+    def decrement_message_count(simulation_id: int) -> None:
+        with get_session() as session:
+            with session.begin():
+                statement = select(Simulation).where(
+                Simulation.id == simulation_id)
+                cnt = session.execute(statement).first()[0].current_message_count
+                statement = update(Simulation)\
+                    .where(Simulation.id == simulation_id)\
+                    .values(current_message_count=cnt-1)
+                session.execute(statement)
+
+    @staticmethod
+    def increment_message_count(simulation_id: int) -> None:
+        with get_session() as session:
+            with session.begin():
+                statement = select(Simulation).where(
+                Simulation.id == simulation_id)
+                cnt = session.execute(statement).first()[0].current_message_count
+                statement = update(Simulation)\
+                    .where(Simulation.id == simulation_id)\
+                    .values(current_message_count=cnt+1)
                 session.execute(statement)
 
 

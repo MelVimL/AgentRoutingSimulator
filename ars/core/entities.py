@@ -54,7 +54,7 @@ class EntityScheduler:
             try:
                 self._entities.get(priority).remove(entity)
             except ValueError:
-                break
+                pass
 
 
 class Entity(Indentifiable, Behaving):
