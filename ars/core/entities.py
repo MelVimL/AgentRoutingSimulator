@@ -177,6 +177,10 @@ class Connection(Entity, NetworkAccess):
     def has_message(self, agent):
         messages = self._get_messages(agent, Connection.OUT)
         return bool(messages)
+    
+    def has_something_to_send(self, agent):
+        messages = self._get_messages(agent, Connection.IN)
+        return bool(messages)
 
     def receive(self, agent) -> dict:
         messages = self._get_messages(agent, Connection.OUT)

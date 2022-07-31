@@ -56,7 +56,7 @@ class SimpleWireless(ConnectionBehavior):
     def update(self, time_step):
         connection = self.get_connection()
         agents = connection.get_participants()
-        agents_with_messages = [(a, b) for a, b in permutations(agents, 2)]
+        agents_with_messages = [(a, b) for a, b in permutations(agents, 2) if connection.has_something_to_send(a)]
         bandwidth_per_agent = self.max_bandwidth/len(agents_with_messages)
         
         for a, b in agents_with_messages:
