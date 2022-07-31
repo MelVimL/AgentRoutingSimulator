@@ -189,10 +189,10 @@ class Connection(Entity, NetworkAccess):
 
         return msg
 
-    def transfer_bytes(self, source, target, bytes: bytes):
+    def transfer_bytes(self, source, target, bytes):
         in_list = self._get_messages(source, Connection.IN)
         out_list = self._get_messages(target, Connection.OUT)
-        
+        log.info(f"{source}, {target}, {bytes}")
         while bytes != 0 and in_list:
             msg = in_list.pop()
             log.info(f"Message: {msg}")
