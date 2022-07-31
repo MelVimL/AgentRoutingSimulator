@@ -60,7 +60,7 @@ class SimpleWireless(ConnectionBehavior):
         
         for a, b in agents_with_messages:
 
-            distance = distance_of_agents(a, b)
+            distance = distance_of_agents(a, b)+0.000000000000000001 #ISSUE FIX WITH DESTINATION 0.0
             signal_strength = -(1/self.max_range)*distance**2+1
             throughput = round(bandwidth_per_agent *
                                signal_strength * self.time_step_length)
