@@ -3,8 +3,9 @@ from ..core.behavior import Behavior
 from ..utils.spatial import distance_of_agents
 from math import pi, pow
 from itertools import permutations
+import logging
 
-
+log = logging.getLogger("__main__")
 
 
 
@@ -55,18 +56,23 @@ class SimpleWireless(ConnectionBehavior):
     def update(self, time_step):
         connection = self.get_connection()
         agents = connection.get_participants()
-        agents_with_messages = [(a, b) for a, b in permutations(agents, 2)]
+        agents_with_messages = [(a, b) for a, b in permutations(agents, 2) if connection.has_something_to_send(a)]
+        
+        if not agents_with_messages:
+            return
+        
         bandwidth_per_agent = self.max_bandwidth/len(agents_with_messages)
         
         for a, b in agents_with_messages:
-
-            distance = distance_of_agents(a, b)
+            distance = distance_of_agents(a, b)+0.000000000000000001 #ISSUE FIX WITH DESTINATION 0.0
             signal_strength = -(1/self.max_range)*distance**2+1
             throughput = round(bandwidth_per_agent *
                                signal_strength * self.time_step_length)
-
+            log.info(f"{a} -> {b}")
+            log.info(f"Distance: {distance}")
+            log.info(f"throughput: {throughput}")
             connection.transfer_bytes(a, b, throughput)
-
+        
 
 class LinearConntection(ConnectionBehavior):
     """

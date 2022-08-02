@@ -65,15 +65,39 @@ class SimulationAPI():
         with get_session() as session, session.begin():
             statement = select(Simulation).where(
                 Simulation.id == simulation_id)
-            return session.execute(statement).first()[0].current_message_count
+            return 
 
     @staticmethod
-    def set_message_count(simulation_id: int, message_count) -> None:
+    def set_message_count(simulation_id: int, cnt: int) -> None:
         with get_session() as session:
             with session.begin():
                 statement = update(Simulation)\
                     .where(Simulation.id == simulation_id)\
-                    .values(current_message_count=message_count)
+                    .values(current_message_count=cnt)
+                session.execute(statement)
+
+    @staticmethod
+    def decrement_message_count(simulation_id: int) -> None:
+        with get_session() as session:
+            with session.begin():
+                statement = select(Simulation).where(
+                Simulation.id == simulation_id)
+                cnt = session.execute(statement).first()[0].current_message_count
+                statement = update(Simulation)\
+                    .where(Simulation.id == simulation_id)\
+                    .values(current_message_count=cnt-1)
+                session.execute(statement)
+
+    @staticmethod
+    def increment_message_count(simulation_id: int) -> None:
+        with get_session() as session:
+            with session.begin():
+                statement = select(Simulation).where(
+                Simulation.id == simulation_id)
+                cnt = session.execute(statement).first()[0].current_message_count
+                statement = update(Simulation)\
+                    .where(Simulation.id == simulation_id)\
+                    .values(current_message_count=cnt+1)
                 session.execute(statement)
 
 
@@ -128,10 +152,19 @@ class StatsAPI:
         StatsAPI.stats_to_send = []
 
     @staticmethod
-    def get_stats(simulation_id: int, stat_type_id: int,):
+    def get_stats(simulation_id: int, stat_type_id: int):
         with get_session() as session, session.begin():
             statement = select(Stat)\
                 .where(Stat.simulation_id == simulation_id)\
                 .where(Stat.stat_type_id == stat_type_id)\
+                .order_by(Stat.step)
+            return [(x[0].step, x[0].value) for x in session.execute(statement).all()]
+    @staticmethod
+    def get_stats_until(simulation_id: int, stat_type_id: int, until_time_step = 100000):
+        with get_session() as session, session.begin():
+            statement = select(Stat)\
+                .where(Stat.simulation_id == simulation_id)\
+                .where(Stat.stat_type_id == stat_type_id)\
+                .where(Stat.step<=until_time_step)\
                 .order_by(Stat.step)
             return [(x[0].step, x[0].value) for x in session.execute(statement).all()]

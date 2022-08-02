@@ -6,6 +6,10 @@ from dataclasses import dataclass
 from ..network import Network
 import json
 
+import logging
+
+log = logging.getLogger("__main__")
+
 
 class EntityScheduler:
     """
@@ -50,7 +54,7 @@ class EntityScheduler:
             try:
                 self._entities.get(priority).remove(entity)
             except ValueError:
-                break
+                pass
 
 
 class Entity(Indentifiable, Behaving):
@@ -138,6 +142,7 @@ class Connection(Entity, NetworkAccess):
             return json_nois + data.get(fake_type, -json_nois)
 
         def transmit(self, bytes):
+
             if bytes >= self.to_send:
                 bytes_left = bytes - self.to_send
                 self.to_send = 0
@@ -172,6 +177,10 @@ class Connection(Entity, NetworkAccess):
     def has_message(self, agent):
         messages = self._get_messages(agent, Connection.OUT)
         return bool(messages)
+    
+    def has_something_to_send(self, agent):
+        messages = self._get_messages(agent, Connection.IN)
+        return bool(messages)
 
     def receive(self, agent) -> dict:
         messages = self._get_messages(agent, Connection.OUT)
@@ -184,12 +193,13 @@ class Connection(Entity, NetworkAccess):
 
         return msg
 
-    def transfer_bytes(self, source, target, bytes: bytes):
+    def transfer_bytes(self, source, target, bytes):
         in_list = self._get_messages(source, Connection.IN)
         out_list = self._get_messages(target, Connection.OUT)
-
+        log.info(f"{source}, {target}, {bytes}")
         while bytes != 0 and in_list:
             msg = in_list.pop()
+            log.info(f"Message: {msg}")
             bytes = msg.transmit(bytes)
             if msg.is_transmitted():
                 out_list.insert(0, msg)
