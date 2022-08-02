@@ -36,7 +36,7 @@ class Network():
                 agent_b: Agent,
                 connection: Connection) -> None:
         self._bind_agents_to_connection(agent_a, agent_b, connection)
-        self.graph.add_edge(agent_a, agent_b, connection=connection)
+        self.graph.add_edge(agent_a, agent_b) #, connection=connection)
 
     def _bind_agents_to_connection(self,
                                    agent_a: Agent,
@@ -45,9 +45,9 @@ class Network():
         agent_a.set_network(self)
         agent_b.set_network(self)
 
-        connection.set_network(self)
-        connection.set_agent(agent_a)
-        connection.set_agent(agent_b)
+        #connection.set_network(self)
+        #connection.set_agent(agent_a)
+        #connection.set_agent(agent_b)
 
     def get_all_connections(self) -> list[Connection]:
         return [x[2] for x in self.graph.edges.data("connection", None)]
